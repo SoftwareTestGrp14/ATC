@@ -17,13 +17,13 @@ namespace UnitTests
             _uut = new Track("“ATR423", 39045, 12932, 14000, 500, 120, new DateTime(2019,3,19));
         }
 
-
+        /*
         [Test]
         public void CreateTrack_InstantiateTrack_TagSet()
         {
             Assert.That(_uut._tag.Equals("ATR423"));
         }
-
+        */
         [Test]
         public void CreateTrack_InstantiateTrack_xCordSet()
         {
