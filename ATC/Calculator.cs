@@ -20,27 +20,43 @@ namespace ATC
         {
             int xDiff = xCord2 - xCord1;
             int yDiff = yCord2 - yCord1;
-            double angle = Math.Atan(xDiff / yDiff);
+            if (yDiff == 0)//if straight east or west
+            {
+                if (xDiff < 0)
+                    return 270;
+                else
+                    return 90;
+            }
+            if (xDiff == 0)//if straight north or south
+            {
+                if (yDiff < 0)
+                    return 180;
+                else
+                    return 0;
+            }
+
+            double angle = (Math.Atan(yDiff / xDiff) * (180 / Math.PI));
+            
             if (yDiff > 0) //Første og anden kvadrant (Fløjet nord på)
             {
                 if (xDiff > 0) //Første kvadrant
                 {
-                    return (270 + angle);
+                    return (90 - angle);
                 }
                 else // Anden kvadrant
                 {
-                    return (90 + angle);
+                    return (270 - angle);
                 }
             }
             else //Tredje og fjerde kvadrant (Fløjet sydpå)
             {
                 if (xDiff < 0) //Tredje kvadrant
                 {
-                    return (90 + angle);
+                    return (270 - angle);
                 }
                 else //Fjerde kvadrant
                 {
-                    return (270 + angle);
+                    return (90 - angle);
                 }
             }
         }
