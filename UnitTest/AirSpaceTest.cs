@@ -32,6 +32,18 @@ namespace TestApp
             Assert.That(_uut.GetYEndPoint(), Is.EqualTo(80000));
         }
 
+        [Test]
+        public void GetXStartPoint_XStartPointEq0()
+        {
+            Assert.That(_uut.XStartPoint, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GetYStartPoint_YStartPointEq0()
+        {
+            Assert.That(_uut.YStartPoint, Is.EqualTo(0));
+        }
+
 
     }
 }
