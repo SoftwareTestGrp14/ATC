@@ -39,22 +39,22 @@ namespace ATC
             
             if (yDiff > 0) //Første og anden kvadrant (Fløjet nord på)
             {
-                if (xDiff > 0) //Første kvadrant
+                if (xDiff > 0) //Første kvadrant (nordøst)
                 {
                     return (90 - angle);
                 }
-                else // Anden kvadrant
+                else // Anden kvadrant (nordvest)
                 {
                     return (270 - angle);
                 }
             }
             else //Tredje og fjerde kvadrant (Fløjet sydpå)
             {
-                if (xDiff < 0) //Tredje kvadrant
+                if (xDiff < 0) //Tredje kvadrant (sydvest)
                 {
                     return (270 - angle);
                 }
-                else //Fjerde kvadrant
+                else //Fjerde kvadrant (sydøst)
                 {
                     return (90 - angle);
                 }

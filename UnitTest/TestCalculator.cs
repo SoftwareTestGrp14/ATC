@@ -33,14 +33,14 @@ namespace UnitTests
         }
 
         [TestCase(200, 200, 200, 1200, 0)]
-        [TestCase(200, 1200, 200, 200, 270)]
+        [TestCase(200, 1200, 200, 200, 90)]
         [TestCase(200, 200, 1200, 200, 180)]
-        [TestCase(1200, 200, 200, 200, 90)]
+        [TestCase(1200, 200, 200, 200, 270)]
 
         [TestCase(200, 1200, 200, 1200, 45)]
         [TestCase(1200, 200, 1200, 200, 225)]
-        [TestCase(1200, 200, 200, 1200, 135)]
-        [TestCase(200, 1200, 1200, 200, 315)]
+        [TestCase(1200, 200, 200, 1200, 315)]
+        [TestCase(200, 1200, 1200, 200, 135)]
         public void course_correctCalculation(int x1, int x2, int y1, int y2, double expectedResult)
         {
             Assert.That(Calculator.CalcCourse(x1, x2, y1, y2), Is.EqualTo(expectedResult).Within(1));
