@@ -61,8 +61,5 @@
     <Compile Include="SeparationCondition.cs" />
     <Compile Include="Track.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="dotCoverCoverageConfig.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
