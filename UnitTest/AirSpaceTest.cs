@@ -27,17 +27,16 @@ namespace UnitTest
         }
 
         [Test]
-        public void GetXStartPoint_XStartPointEq0()
+        public void GetMinAltitude_MinAltitudeEq500()
         {
-            Assert.That(_uut.XStartPoint, Is.EqualTo(0));
+            Assert.That(_uut.MinAltitude, Is.EqualTo(500));
         }
 
         [Test]
-        public void GetYStartPoint_YStartPointEq0()
+        public void GetMaxAltitude_MaxAltitudeEq20000()
         {
-            Assert.That(_uut.YStartPoint, Is.EqualTo(0));
+            Assert.That(_uut.MaxAltitude, Is.EqualTo(20000));
         }
-
 
     }
 }
