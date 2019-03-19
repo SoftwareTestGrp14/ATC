@@ -43,9 +43,24 @@ namespace UnitTests
         [TestCase(200, 1200, 1200, 200, 135)]
         public void course_correctCalculation(int x1, int x2, int y1, int y2, double expectedResult)
         {
-            Assert.That(Calculator.CalcCourse(x1, x2, y1, y2), Is.EqualTo(expectedResult).Within(1));
+            Assert.That(Calculator.CalcCourse(x1, x2, y1, y2), Is.EqualTo(expectedResult));
         }
 
+        [TestCase(10000,4999,2000,false)]
+        [TestCase(10000, 5001, 2000, true)]
+        [TestCase(10000, 7500, 1699, false)]
+        [TestCase(10000, 7500, 2301, false)]
+        [TestCase(10000, 7500, 1701, true)]
+        [TestCase(10000, 8000, 2299, true)]
+        [TestCase(5500, 8000, 2000, true)]
+        [TestCase(5500, 7000, 2000, false)]
+        public void seperation_raisecondition(int x, int y, int z, bool expectedResult)
+        {
+            ITrack t1 = new Track("testInput", x, y, z,3,90, date1);
+            ITrack t2 = new Track("ToCheckAgainst", 10000,10000,2000,3,90,date1);
+
+            Assert.That(Calculator.IsSeparation(t1, t2), Is.EqualTo(expectedResult));
+        }
     }
 }
 
