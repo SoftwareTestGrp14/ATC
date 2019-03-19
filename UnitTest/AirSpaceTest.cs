@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ATC;
+﻿using ATC;
 using NUnit.Framework;
-using NSubstitute;
 
-namespace TestApp
+namespace UnitTest
 {
     [TestFixture]
     class AirSpaceTest
@@ -32,6 +26,17 @@ namespace TestApp
             Assert.That(_uut.GetYEndPoint(), Is.EqualTo(80000));
         }
 
+        [Test]
+        public void GetMinAltitude_MinAltitudeEq500()
+        {
+            Assert.That(_uut.MinAltitude, Is.EqualTo(500));
+        }
+
+        [Test]
+        public void GetMaxAltitude_MaxAltitudeEq20000()
+        {
+            Assert.That(_uut.MaxAltitude, Is.EqualTo(20000));
+        }
 
     }
 }
