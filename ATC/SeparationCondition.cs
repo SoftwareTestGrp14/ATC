@@ -28,7 +28,7 @@ namespace ATC
         public bool Equals(SeparationCondition other)
         {
             // Would still want to check for null etc. first.
-            return ((this._track1 == other._track1 && this._track2 == other._track2)||(this._track1 == other._track2 && this._track2 == other._track1));
+            return ((this._track1.Equals(other._track1) && this._track2.Equals(other._track2)))||(this._track1.Equals(other._track2) && this._track2.Equals(other._track1));
         }
 
     }
