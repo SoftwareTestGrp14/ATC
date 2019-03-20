@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace UnitTest
 {
-    class TestATC
+    /*class TestATC
     {
         private ATM _fakeATM;
         private ATC.ATC _uut;
@@ -27,5 +27,5 @@ namespace UnitTest
 
             Assert.That(_uut, Is.Not.EqualTo(null));
         }
-    }
+    }*/
 }
