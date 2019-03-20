@@ -90,10 +90,48 @@ namespace UnitTests
             string data1 = "ATR423; 39045; 12932; 14000; 20151006213456789";
             string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
 
+            string data3 = "ABC123; 10000; 5000; 10000; 20151006213456789";
+            string data4 = "ABC123; 10000; 5000; 10000; 20151006213656789";
+
+            _fakeAirSpaceTracker.IsInAirSpace(_fakeAirSpace, Arg.Any<ITrack>()).Returns(true);
+
             _uut.Update(data1);
             _uut.Update(data2);
 
+            _uut.Update(data3);
+            _uut.Update(data4);
+
             _fakeCalculator.Received().IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
+
+        }
+
+        [Test]
+        public void Test_CalcVelocity_Called_OnUpdate()
+        {
+            string data1 = "ATR423; 39045; 12932; 14000; 20151006213456789";
+            string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
+
+          
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _fakeCalculator.Received().CalcVelocity(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(),
+                Arg.Any<DateTime>(), Arg.Any<DateTime>());
+
+        }
+
+        [Test]
+        public void Test_CalcCourse_Called_OnUpdate()
+        {
+            string data1 = "ATR423; 39045; 12932; 14000; 20151006213456789";
+            string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
+
+    
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _fakeCalculator.Received().CalcCourse(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>());
 
         }
 
