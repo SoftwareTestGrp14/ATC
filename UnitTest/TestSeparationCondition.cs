@@ -25,7 +25,7 @@ namespace UnitTests3 {
         public void TestEqualsMethod()
         {
            
-
+            
             //Assert.That();
         }
     }

@@ -55,6 +55,7 @@
     <Compile Include="IAirSpaceTracker.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IPlaneTracker.cs" />
+    <Compile Include="ISeparationCondition.cs" />
     <Compile Include="ITrack.cs" />
     <Compile Include="PlaneTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

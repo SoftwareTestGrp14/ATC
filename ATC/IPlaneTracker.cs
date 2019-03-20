@@ -9,5 +9,6 @@ namespace ATC
 
         void Update(string data);
 
+        string[] ConvertTransponderData(string data);
     }
 }
