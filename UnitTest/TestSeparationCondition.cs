@@ -54,5 +54,12 @@ namespace UnitTests3 {
 
             Assert.That(_uut.Equals(sc1), Is.False);
         }
+
+        [Test]
+        public void GetFunction_Datetime()
+        {
+            //Tests get function for timestamp
+            Assert.That(_uut.Timestamp, Is.EqualTo(_uut._track2._timestamp));
+        }
     }
 }
