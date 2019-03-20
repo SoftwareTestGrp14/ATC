@@ -31,7 +31,7 @@ namespace UnitTest
         }
 
         [TestCase("ATR423;39045;12932;14000;20151006213456789")]
-        public void TransponderDataChanged_DifferentArguments_CurrentReceiverDataIsCorrect(string receiverData)
+        public void TransponderDataChanged_DifferentArguments_UpdateGetsCalledWithCorrectData(string receiverData)
         {
             var fakeList = new List<string>();
             fakeList.Add(receiverData);
