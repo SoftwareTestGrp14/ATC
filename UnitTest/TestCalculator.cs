@@ -10,12 +10,14 @@ namespace UnitTests
     {
         private DateTime date1;
         private DateTime date2;
+        private Calculator _uut;
 
         [SetUp]
         public void Setup()
         {
             date1 = new DateTime(2019, 3, 19, 13, 0, 0);
             date2 = new DateTime(2019, 3, 19, 14, 0, 0);
+            _uut = new Calculator();
         }
 
         [TestCase(200, 200, 200, 1200, 0.27)]
@@ -29,7 +31,7 @@ namespace UnitTests
         [TestCase(200, 1200, 1200, 200, 0.39)]
         public void velocity_CorrectCalculation(int x1, int x2, int y1, int y2, double expectedResult)
         {
-            Assert.That(Calculator.CalcVelocity(x1,x2,y1,y2,date1,date2), Is.EqualTo(expectedResult).Within(0.01));
+            Assert.That(_uut.CalcVelocity(x1,x2,y1,y2,date1,date2), Is.EqualTo(expectedResult).Within(0.01));
         }
 
         [TestCase(200, 200, 200, 1200, 0)]
@@ -43,7 +45,7 @@ namespace UnitTests
         [TestCase(200, 1200, 1200, 200, 135)]
         public void course_correctCalculation(int x1, int x2, int y1, int y2, double expectedResult)
         {
-            Assert.That(Calculator.CalcCourse(x1, x2, y1, y2), Is.EqualTo(expectedResult));
+            Assert.That(_uut.CalcCourse(x1, x2, y1, y2), Is.EqualTo(expectedResult));
         }
 
         [TestCase(10000,4999,2000,false)]
@@ -60,7 +62,7 @@ namespace UnitTests
             ITrack t1 = new Track("testInput", x, y, z,3,90, date1);
             ITrack t2 = new Track("ToCheckAgainst", 10000,10000,2000,3,90,date1);
 
-            Assert.That(Calculator.IsSeparation(t1, t2), Is.EqualTo(expectedResult));
+            Assert.That(_uut.IsSeparation(t1, t2), Is.EqualTo(expectedResult));
         }
     }
 }

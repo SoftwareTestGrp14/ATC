@@ -13,6 +13,7 @@ namespace ATC
         List<ISeparationCondition> _currentSeparations { get; }
         ConsoleLog _cLog { get; }
         FileLog _fLog { get; }
+        ICalculator _calc { get; }
         void Update(string data);
 
         string[] ConvertTransponderData(string data);

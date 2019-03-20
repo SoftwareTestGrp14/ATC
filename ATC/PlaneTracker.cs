@@ -18,8 +18,9 @@ namespace ATC
         public List<ISeparationCondition> _currentSeparations { get; }
         public ConsoleLog _cLog { get;}
         public FileLog _fLog { get; }
+        public ICalculator _calc { get; }
 
-        public PlaneTracker(IAirSpace airSpace, IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog)
+        public PlaneTracker(IAirSpace airSpace, IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc)
         {
             _cLog = cLog;
             _fLog = fLog;
@@ -27,6 +28,7 @@ namespace ATC
             _currentSeparations = currentSeparations;
             _airSpaceTracker = airSpaceTracker;
             _airSpace = airSpace;
+            _calc = calc;
         }
 
 
@@ -52,9 +54,9 @@ namespace ATC
                 if (AircraftName[0] == newData[0])
                 {
                      //If there the aircraft is already registered the new velocity and course is calculated and the data is overwritten
-                    vel = Calculator.CalcVelocity(int.Parse(AircraftName[1]), int.Parse(newData[1]), int.Parse(AircraftName[2]), int.Parse(newData[2]), DateTime.Parse(AircraftName[4]), DateTime.Parse(newData[4]));
+                    vel = _calc.CalcVelocity(int.Parse(AircraftName[1]), int.Parse(newData[1]), int.Parse(AircraftName[2]), int.Parse(newData[2]), DateTime.Parse(AircraftName[4]), DateTime.Parse(newData[4]));
                     
-                    course = Calculator.CalcCourse(int.Parse(AircraftName[1]), int.Parse(newData[1]), int.Parse(AircraftName[2]), int.Parse(newData[2]));
+                    course = _calc.CalcCourse(int.Parse(AircraftName[1]), int.Parse(newData[1]), int.Parse(AircraftName[2]), int.Parse(newData[2]));
                     for (int j = 0; j < newData.Length; j++)
                     {
                         AircraftName[j] = newData[j];
@@ -113,7 +115,7 @@ namespace ATC
 
                         SeparationCondition newSeparationCondition = new SeparationCondition(curTrack, newTrack);
 
-                        if (Calculator.IsSeparation(curTrack, newTrack))
+                        if (_calc.IsSeparation(curTrack, newTrack))
                         {
                             //Separation detected on the two tracks
                             if (!_currentSeparations.Exists(x => x == newSeparationCondition))

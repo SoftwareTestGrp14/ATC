@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ATC
 {
-    public static class Calculator
+    public class Calculator:ICalculator
     {
-        public static double CalcVelocity(int xCord1, int xCord2, int yCord1, int yCord2, DateTime time1, DateTime time2)
+        public double CalcVelocity(int xCord1, int xCord2, int yCord1, int yCord2, DateTime time1, DateTime time2)
         {
             TimeSpan timeDiff = time2.Subtract(time1);
             int xDiff = xCord2 - xCord1;
@@ -16,7 +16,7 @@ namespace ATC
             return (distance / timeDiff.TotalSeconds);
         }
 
-        public static double CalcCourse(int xCord1, int xCord2, int yCord1, int yCord2)
+        public double CalcCourse(int xCord1, int xCord2, int yCord1, int yCord2)
         {
             int xDiff = xCord2 - xCord1;
             int yDiff = yCord2 - yCord1;
@@ -61,7 +61,7 @@ namespace ATC
             }
         }
 
-        public static bool IsSeparation(ITrack track1, ITrack track2)
+        public bool IsSeparation(ITrack track1, ITrack track2)
         {
             if (track1._alt <= (track2._alt + 300) && track1._alt >= (track2._alt - 300))
             {
