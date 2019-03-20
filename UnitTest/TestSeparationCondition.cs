@@ -33,7 +33,7 @@ namespace UnitTests3 {
         [Test]
         public void TestEqualsMethod_SameOrder_SameTracks_ExpectedTrue()
         {
-            ISeparationCondition sc1 = new SeparationCondition(t1, t2);
+            var sc1 = new SeparationCondition(t1, t2);
 
             Assert.That(_uut.Equals(sc1), Is.True);
         }
@@ -41,7 +41,7 @@ namespace UnitTests3 {
         [Test]
         public void TestEqualsMethod_ReverseOrder_SameTracks_ExpectedTrue()
         {
-            ISeparationCondition sc1 = new SeparationCondition(t2, t1);
+            var sc1 = new SeparationCondition(t2, t1);
 
             Assert.That(_uut.Equals(sc1), Is.True);
         }
@@ -49,7 +49,7 @@ namespace UnitTests3 {
         [Test]
         public void TestEqualsMethod_DifferentTracks_ExpectedFalse()
         {
-            ISeparationCondition sc1 = new SeparationCondition(t1, t3);
+            var sc1 = new SeparationCondition(t1, t3);
 
             Assert.That(_uut.Equals(sc1), Is.False);
         }
