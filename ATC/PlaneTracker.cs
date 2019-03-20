@@ -76,18 +76,17 @@ namespace ATC
                 
                 //The track is then created for the new data
                 ITrack newTrack = new Track(newData[0], int.Parse(newData[1]), int.Parse(newData[2]), int.Parse(newData[3]), vel, course, DateTime.Parse(newData[4]));
-                Console.WriteLine("TEST");
-                Console.WriteLine(_airSpaceTracker.IsInAirSpace(_airSpace, newTrack));
+                
                 //checks if the new track is in the airspace
                 if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && !_tracks.Exists(x => x._tag == newTrack._tag))
                 {
-                    Console.WriteLine("1");
+                   
                     //The track is in the airspace and it is not in the list already, it will be added
                     _tracks.Add(newTrack);
                 }
                 else if (!_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
-                    Console.WriteLine("2");
+                    
                     //The track is not in airspace but it is in the list already, it will be removed   
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
                     _tracks.RemoveAt(index);
@@ -95,14 +94,14 @@ namespace ATC
                 }
                 else if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
-                    Console.WriteLine("3");
+                    
                     //The track is in the airspace and is already in the list, it will be overwritten
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
                     _tracks.RemoveAt(index);
                     _tracks.Add(newTrack);
 
                 }
-                Console.WriteLine("TESTTEST");
+              
 
 
                 //Handles separation

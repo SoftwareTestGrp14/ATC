@@ -21,11 +21,12 @@ namespace UnitTests3 {
 
             //equalsSeparation = new SeparationCondition(_fakeTrack1, _fakeTrack2);
 
-            DateTime date = new DateTime(2019, 3, 19, 13, 0, 0);
+            DateTime date1 = new DateTime(2019, 3, 19, 13, 0, 0);
+            DateTime date2 = new DateTime(2019, 3, 19, 14, 0, 0);
 
-            t1 = new Track("Tag1", 10000, 10000, 2000, 3, 90, date);
-            t2 = new Track("Tag2", 10000, 10000, 2000, 3, 90, date);
-            t3 = new Track("Tag3", 10000, 10000, 2000, 3, 90, date);
+            t1 = new Track("Tag1", 10000, 10000, 2000, 3, 90, date1);
+            t2 = new Track("Tag2", 10000, 10000, 2000, 3, 90, date2);
+            t3 = new Track("Tag3", 10000, 10000, 2000, 3, 90, date1);
 
             _uut = new SeparationCondition(t1, t2);
         }
@@ -33,7 +34,7 @@ namespace UnitTests3 {
         [Test]
         public void TestEqualsMethod_SameOrder_SameTracks_ExpectedTrue()
         {
-            ISeparationCondition sc1 = new SeparationCondition(t1, t2);
+            var sc1 = new SeparationCondition(t1, t2);
 
             Assert.That(_uut.Equals(sc1), Is.True);
         }
@@ -41,7 +42,7 @@ namespace UnitTests3 {
         [Test]
         public void TestEqualsMethod_ReverseOrder_SameTracks_ExpectedTrue()
         {
-            ISeparationCondition sc1 = new SeparationCondition(t2, t1);
+            var sc1 = new SeparationCondition(t2, t1);
 
             Assert.That(_uut.Equals(sc1), Is.True);
         }
@@ -49,7 +50,7 @@ namespace UnitTests3 {
         [Test]
         public void TestEqualsMethod_DifferentTracks_ExpectedFalse()
         {
-            ISeparationCondition sc1 = new SeparationCondition(t1, t3);
+            var sc1 = new SeparationCondition(t1, t3);
 
             Assert.That(_uut.Equals(sc1), Is.False);
         }
