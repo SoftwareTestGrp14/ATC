@@ -21,11 +21,12 @@ namespace UnitTests3 {
 
             //equalsSeparation = new SeparationCondition(_fakeTrack1, _fakeTrack2);
 
-            DateTime date = new DateTime(2019, 3, 19, 13, 0, 0);
+            DateTime date1 = new DateTime(2019, 3, 19, 13, 0, 0);
+            DateTime date2 = new DateTime(2019, 3, 19, 14, 0, 0);
 
-            t1 = new Track("Tag1", 10000, 10000, 2000, 3, 90, date);
-            t2 = new Track("Tag2", 10000, 10000, 2000, 3, 90, date);
-            t3 = new Track("Tag3", 10000, 10000, 2000, 3, 90, date);
+            t1 = new Track("Tag1", 10000, 10000, 2000, 3, 90, date1);
+            t2 = new Track("Tag2", 10000, 10000, 2000, 3, 90, date2);
+            t3 = new Track("Tag3", 10000, 10000, 2000, 3, 90, date1);
 
             _uut = new SeparationCondition(t1, t2);
         }
