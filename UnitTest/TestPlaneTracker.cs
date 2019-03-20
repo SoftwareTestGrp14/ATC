@@ -84,6 +84,21 @@ namespace UnitTests
 
         }
 
+        [Test]
+        public void Test_IsSeparation_Called_OnUpdate()
+        {
+            string data1 = "ATR423; 39045; 12932; 14000; 20151006213456789";
+            string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _fakeCalculator.Received().IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
+
+        }
+
+
+
 
 
     }

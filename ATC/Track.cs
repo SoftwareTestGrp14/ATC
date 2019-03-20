@@ -12,7 +12,7 @@ namespace ATC
             _xCord = xC;
             _yCord = yC;
             
-            if(alt > 0 && vel >= 500 && course >= 0 && course < 360)
+            if(alt >= 500 && vel >= 0 && course >= 0 && course < 360)
             {
                 _alt = alt;
                 _velocity = vel;
