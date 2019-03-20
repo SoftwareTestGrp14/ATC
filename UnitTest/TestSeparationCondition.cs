@@ -1,4 +1,5 @@
-﻿using ATC;
+﻿using System.Collections.Generic;
+using ATC;
 using NUnit.Framework;
 using NSubstitute;
 
@@ -10,11 +11,13 @@ namespace UnitTests3 {
         private ITrack _fakeTrack1;
         private ITrack _fakeTrack2;
 
+
         [SetUp]
         public void Setup()
         {
             _fakeTrack1 = Substitute.For<ITrack>();
             _fakeTrack2 = Substitute.For<ITrack>();
+
 
 
             equalsSeparation = new SeparationCondition(_fakeTrack1, _fakeTrack2);

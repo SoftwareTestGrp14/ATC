@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -9,17 +10,21 @@ namespace ATC
 {
     public class PlaneTracker : IPlaneTracker
     {
-        
-        private List<ITrack> tracks = new List<ITrack>();
+
+        private List<ITrack> _tracks;
         private IAirSpaceTracker _airSpaceTracker;
         private IAirSpace _airSpace;
         private List<string[]> tempDataList = new List<string[]>();
-        private List<ISeparationCondition> currentSeparations = new List<ISeparationCondition>();
-        ConsoleLog cLog = new ConsoleLog();
-        FileLog fLog = new FileLog();
+        private List<ISeparationCondition> _currentSeparations;
+        ConsoleLog _cLog = new ConsoleLog();
+        FileLog _fLog = new FileLog();
 
-        public PlaneTracker(IAirSpace airSpace, IAirSpaceTracker airSpaceTracker, )
+        public PlaneTracker(IAirSpace airSpace, IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog)
         {
+            _cLog = cLog;
+            _fLog = fLog;
+            _tracks = tracks;
+            _currentSeparations = currentSeparations;
             _airSpaceTracker = airSpaceTracker;
             _airSpace = airSpace;
         }
@@ -28,8 +33,8 @@ namespace ATC
         public void Update(string data)
         {
             Console.Clear();
-            cLog.Write(data);
-            cLog.Write("");
+            _cLog.Write(data);
+            _cLog.Write("");
             //initializing temps
             double vel=0;
             double course=0;
@@ -72,30 +77,30 @@ namespace ATC
 
                 
                 //checks if the new track is in the airspace
-                if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && !tracks.Exists(x=>x._tag==newTrack._tag))
+                if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && !_tracks.Exists(x=>x._tag==newTrack._tag))
                 {
                     //The track is in the airspace and it is not in the list already, it will be added
-                    tracks.Add(newTrack);
+                    _tracks.Add(newTrack);
                 }
-                else if (!_airSpaceTracker.IsInAirSpace(_airSpace,newTrack) && tracks.Exists(x => x._tag == newTrack._tag))
+                else if (!_airSpaceTracker.IsInAirSpace(_airSpace,newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
                 //The track is not in airspace but it is in the list already, it will be removed   
-                int index = tracks.FindIndex(x => x._tag == newTrack._tag);
-                tracks.RemoveAt(index);
+                int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
+                _tracks.RemoveAt(index);
 
                 }
-                else if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && tracks.Exists(x => x._tag == newTrack._tag))
+                else if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
                     //The track is in the airspace and is already in the list, it will be overwritten
-                    int index = tracks.FindIndex(x=>x._tag == newTrack._tag);
-                    tracks.RemoveAt(index);
-                    tracks.Add(newTrack);
+                    int index = _tracks.FindIndex(x=>x._tag == newTrack._tag);
+                    _tracks.RemoveAt(index);
+                    _tracks.Add(newTrack);
 
                 }
 
             
             //Handles separation
-            foreach (var curTrack in tracks)
+            foreach (var curTrack in _tracks)
                 {
                     if (curTrack != newTrack)
                     {
@@ -106,31 +111,31 @@ namespace ATC
                         if (Calculator.IsSeparation(curTrack, newTrack))
                         {
                             //Separation detected on the two tracks
-                            if (!currentSeparations.Exists(x => x == newSeparationCondition))
+                            if (!_currentSeparations.Exists(x => x == newSeparationCondition))
                             {
                                 //This separation was not previously registered and will be inserted in list
-                                currentSeparations.Add(newSeparationCondition);
-                                fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
+                                _currentSeparations.Add(newSeparationCondition);
+                                _fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
 
                             }
                             else
                             {
                                 //This separation was previously registered and will overwrite existing
 
-                                int index = currentSeparations.FindIndex(x => x == newSeparationCondition);
-                                currentSeparations.RemoveAt(index);
-                                currentSeparations.Add(newSeparationCondition);
+                                int index = _currentSeparations.FindIndex(x => x == newSeparationCondition);
+                                _currentSeparations.RemoveAt(index);
+                                _currentSeparations.Add(newSeparationCondition);
                             }
 
                         }
                         else
                         {
                             //Separation not detected on the two tracks
-                            if (currentSeparations.Exists(x => x == newSeparationCondition))
+                            if (_currentSeparations.Exists(x => x == newSeparationCondition))
                             {
                                 //Sepration was previously registered and will be removed
-                                int index = currentSeparations.FindIndex(x => x == newSeparationCondition);
-                                currentSeparations.RemoveAt(index);
+                                int index = _currentSeparations.FindIndex(x => x == newSeparationCondition);
+                                _currentSeparations.RemoveAt(index);
                             }
 
                             //If it was not registered then nothing needs to be done.
@@ -141,23 +146,23 @@ namespace ATC
                 }
 
             //Writes to log
-            cLog.Write("");
-            cLog.Write("All tracks in airspace :");
-            foreach (var track in tracks)
+            _cLog.Write("");
+            _cLog.Write("All tracks in airspace :");
+            foreach (var track in _tracks)
             {
-                cLog.Write(track._tag);
+                _cLog.Write(track._tag);
             }
-            cLog.Write("");
-            cLog.Write("");
+            _cLog.Write("");
+            _cLog.Write("");
 
-            cLog.Write("");
-            cLog.Write("All separations:");
-            foreach (var sep in currentSeparations)
+            _cLog.Write("");
+            _cLog.Write("All separations:");
+            foreach (var sep in _currentSeparations)
             {
-                cLog.Write($"Separation between: {sep._track1._tag} and {sep._track2._tag}");
+                _cLog.Write($"Separation between: {sep._track2} and {sep._track2._tag}");
             }
-            cLog.Write("");
-            cLog.Write("");
+            _cLog.Write("");
+            _cLog.Write("");
 
 
         }

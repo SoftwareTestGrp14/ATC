@@ -1,4 +1,5 @@
-﻿using ATC;
+﻿using System.Collections.Generic;
+using ATC;
 using NUnit.Framework;
 using NSubstitute;
 
@@ -9,7 +10,10 @@ namespace UnitTests
         private PlaneTracker _uut;
         private IAirSpace _fakeAirSpace;
         private IAirSpaceTracker _fakeAirSpaceTracker;
-
+        private List<ISeparationCondition> _fakeCurrentSeparations;
+        private List<ITrack> _fakeTracks;
+        private ConsoleLog _fakeConsole;
+        private FileLog _fakeFile;
 
 
 
@@ -19,7 +23,12 @@ namespace UnitTests
             _fakeAirSpace = Substitute.For<IAirSpace>();
             _fakeAirSpaceTracker = Substitute.For<IAirSpaceTracker>();
 
-            _uut=new PlaneTracker(_fakeAirSpace, _fakeAirSpaceTracker);
+            _fakeCurrentSeparations = Substitute.For<List<ISeparationCondition>>();
+            _fakeTracks = Substitute.For<List<ITrack>>();
+            _fakeFile = Substitute.For<FileLog>();
+            _fakeConsole = Substitute.For<ConsoleLog>();
+
+            _uut =new PlaneTracker(_fakeAirSpace, _fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile);
         }
 
         [Test]
