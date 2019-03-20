@@ -63,13 +63,12 @@ namespace UnitTests
         }
 
 
-
         [Test]
         public void CompareTracks_InstantiateTrackAndCompare_NotEqual()
         {
             var newTrack = new Track("“ATR11", 14241, 22223, 14000, 500, 120, new DateTime(2019, 3, 19));
 
-            Assert.That(newTrack.);
+            Assert.That(_uut.Equals(newTrack).Re);
         }
         
 
