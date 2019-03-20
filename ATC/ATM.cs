@@ -8,13 +8,12 @@ namespace ATC
     public class ATM
     {
         private IPlaneTracker planeTracker;
+        private ITransponderReceiver receiver;
 
-
-        public ATM(IPlaneTracker plane)
+        public ATM(IPlaneTracker plane, ITransponderReceiver transponderReceiver)
         {
             planeTracker = plane;
-
-            ITransponderReceiver receiver = TransponderReceiverFactory.CreateTransponderDataReceiver();
+            receiver = transponderReceiver;
 
             receiver.TransponderDataReady += Receiver_TransponderDataReady;
         }
