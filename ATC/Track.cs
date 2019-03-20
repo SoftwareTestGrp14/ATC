@@ -12,7 +12,7 @@ namespace ATC
             _xCord = xC;
             _yCord = yC;
             
-            if(alt > 0 && vel > 0 && course >= 0 && course < 360)
+            if(alt > 0 && vel >= 500 && course >= 0 && course < 360)
             {
                 _alt = alt;
                 _velocity = vel;
@@ -22,7 +22,7 @@ namespace ATC
             {
                 Console.WriteLine("Error. Invalid value");
                 Console.WriteLine($"alt: {_alt}, vel: {_velocity}, course: {_course}");
-                
+              
             }
 
             _timestamp = ts;

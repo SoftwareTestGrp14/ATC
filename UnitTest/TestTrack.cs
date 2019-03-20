@@ -82,6 +82,32 @@ namespace UnitTest
             Assert.That(_uut.Equals(newTrack), Is.True);
         }
 
+        [Test]
+        public void Constructor_InvalidValues_Altitude()
+        {
+            var newTrack = new Track("invalidFlight", 39045, 12932, 250, 0, -21, new DateTime(2019, 3, 19));
 
+
+            Assert.That(newTrack._alt, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Constructor_InvalidValues_Velocity()
+        {
+            var newTrack = new Track("invalidFlight", 39045, 12932, 250, 0, -21, new DateTime(2019, 3, 19));
+
+
+            Assert.That(newTrack._velocity, Is.EqualTo(0));
+        }
+
+        [TestCase(-21)]
+        [TestCase(421)]
+        public void Constructor_InvalidValues_Course(double c)
+        {
+            var newTrack = new Track("invalidFlight", 39045, 12932, 250, 0, c, new DateTime(2019, 3, 19));
+
+
+            Assert.That(newTrack._course, Is.EqualTo(0));
+        }
     }
 }
