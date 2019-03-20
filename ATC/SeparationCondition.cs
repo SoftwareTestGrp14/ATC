@@ -4,11 +4,12 @@ using System.Text;
 
 namespace ATC
 {
-    public class SeparationCondition
+    public class SeparationCondition:ISeparationCondition
     {
-        public ITrack _track1;
-        public ITrack _track2;
-        public DateTime Timestamp;
+        public ITrack _track1 { get; }
+        public ITrack _track2 { get; }
+        public DateTime Timestamp { get; }
+
         public SeparationCondition(ITrack track1, ITrack track2)
         {
             _track1 = track1;
@@ -21,6 +22,8 @@ namespace ATC
             
         }
 
+
+      
 
         public bool Equals(SeparationCondition other)
         {
