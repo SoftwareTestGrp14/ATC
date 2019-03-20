@@ -11,16 +11,17 @@ namespace ATC
     {
         
         private List<ITrack> tracks = new List<ITrack>();
-        private IAirSpaceTracker airSpaceTracker;
-        private IAirSpace airSpace;
+        private IAirSpaceTracker _airSpaceTracker;
+        private IAirSpace _airSpace;
         private List<string[]> tempDataList = new List<string[]>();
-        private List<SeparationCondition> currentSeparations = new List<SeparationCondition>();
+        private List<ISeparationCondition> currentSeparations = new List<ISeparationCondition>();
         ConsoleLog cLog = new ConsoleLog();
+        FileLog fLog = new FileLog();
 
-        public PlaneTracker()
+        public PlaneTracker(IAirSpace airSpace, IAirSpaceTracker airSpaceTracker, )
         {
-            airSpaceTracker= new AirSpaceTracker();
-            airSpace = new AirSpace();
+            _airSpaceTracker = airSpaceTracker;
+            _airSpace = airSpace;
         }
 
 
@@ -71,19 +72,19 @@ namespace ATC
 
                 
                 //checks if the new track is in the airspace
-                if (airSpaceTracker.IsInAirSpace(airSpace, newTrack) && !tracks.Exists(x=>x._tag==newTrack._tag))
+                if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && !tracks.Exists(x=>x._tag==newTrack._tag))
                 {
                     //The track is in the airspace and it is not in the list already, it will be added
                     tracks.Add(newTrack);
                 }
-                else if (!airSpaceTracker.IsInAirSpace(airSpace,newTrack) && tracks.Exists(x => x._tag == newTrack._tag))
+                else if (!_airSpaceTracker.IsInAirSpace(_airSpace,newTrack) && tracks.Exists(x => x._tag == newTrack._tag))
                 {
                 //The track is not in airspace but it is in the list already, it will be removed   
                 int index = tracks.FindIndex(x => x._tag == newTrack._tag);
                 tracks.RemoveAt(index);
 
                 }
-                else if (airSpaceTracker.IsInAirSpace(airSpace, newTrack) && tracks.Exists(x => x._tag == newTrack._tag))
+                else if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && tracks.Exists(x => x._tag == newTrack._tag))
                 {
                     //The track is in the airspace and is already in the list, it will be overwritten
                     int index = tracks.FindIndex(x=>x._tag == newTrack._tag);
@@ -109,6 +110,8 @@ namespace ATC
                             {
                                 //This separation was not previously registered and will be inserted in list
                                 currentSeparations.Add(newSeparationCondition);
+                                fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
+
                             }
                             else
                             {
@@ -136,6 +139,8 @@ namespace ATC
                     }
 
                 }
+
+            //Writes to log
             cLog.Write("");
             cLog.Write("All tracks in airspace :");
             foreach (var track in tracks)

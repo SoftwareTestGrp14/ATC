@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ATC
 {
-    public class SeparationCondition
+    public class SeparationCondition:ISeparationCondition
     {
         public ITrack _track1;
         public ITrack _track2;
