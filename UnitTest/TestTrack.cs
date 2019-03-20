@@ -14,16 +14,16 @@ namespace UnitTests
         public void Setup()
         {
 
-            _uut = new Track("“ATR423", 39045, 12932, 14000, 500, 120, new DateTime(2019,3,19));
+            _uut = new Track("ATR423", 39045, 12932, 14000, 500, 120, new DateTime(2019,3,19));
         }
 
-        /*
+        
         [Test]
         public void CreateTrack_InstantiateTrack_TagSet()
         {
             Assert.That(_uut._tag.Equals("ATR423"));
         }
-        */
+        
         [Test]
         public void CreateTrack_InstantiateTrack_xCordSet()
         {
@@ -57,15 +57,20 @@ namespace UnitTests
             Assert.That(_uut._course.Equals(120));
         }
 
+        [Test]
+        public void CreateTrack_InstantiateTrack_DateTimeSet()
+        {
+            Assert.That(_uut._timestamp.Equals("2019-03-19"));
+        }
 
 
 
         [Test]
-        public void CompareTrakcs_InstantiateTrackAndCompare_NotEqual()
+        public void CompareTracks_InstantiateTrackAndCompare_NotEqual()
         {
             var newTrack = new Track("“ATR11", 14241, 22223, 14000, 500, 120, new DateTime(2019, 3, 19));
 
-            Assert.That(_uut._course.Equals(120));
+            Assert.That(newTrack.);
         }
         
 
