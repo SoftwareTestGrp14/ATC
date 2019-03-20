@@ -34,7 +34,7 @@ namespace ATC
 
         public void Update(string data)
         {
-           // Console.Clear();
+            
             _cLog.Write(data);
             _cLog.Write("");
             //initializing temps
@@ -117,8 +117,9 @@ namespace ATC
 
                         if (_calc.IsSeparation(curTrack, newTrack))
                         {
+                           
                             //Separation detected on the two tracks
-                            if (!_currentSeparations.Exists(x => x == newSeparationCondition))
+                            if (!_currentSeparations.Exists(x => x.Equals(newSeparationCondition)))
                             {
                                 //This separation was not previously registered and will be inserted in list
                                 _currentSeparations.Add(newSeparationCondition);
@@ -129,7 +130,7 @@ namespace ATC
                             {
                                 //This separation was previously registered and will overwrite existing
 
-                                int index = _currentSeparations.FindIndex(x => x == newSeparationCondition);
+                                int index = _currentSeparations.FindIndex(x => x.Equals(newSeparationCondition));
                                 _currentSeparations.RemoveAt(index);
                                 _currentSeparations.Add(newSeparationCondition);
                             }
@@ -137,11 +138,13 @@ namespace ATC
                         }
                         else
                         {
+                            
                             //Separation not detected on the two tracks
-                            if (_currentSeparations.Exists(x => x == newSeparationCondition))
+                            if (_currentSeparations.Exists(x => x.Equals(newSeparationCondition)))
                             {
-                                //Sepration was previously registered and will be removed
-                                int index = _currentSeparations.FindIndex(x => x == newSeparationCondition);
+                                
+                                //Separation was previously registered and will be removed
+                                int index = _currentSeparations.FindIndex(x => x.Equals(newSeparationCondition));
                                 _currentSeparations.RemoveAt(index);
                             }
 
@@ -166,7 +169,7 @@ namespace ATC
                 _cLog.Write("All separations:");
                 foreach (var sep in _currentSeparations)
                 {
-                    _cLog.Write($"Separation between: {sep._track2} and {sep._track2._tag}");
+                    _cLog.Write($"Separation between: {sep._track1._tag} and {sep._track2._tag}");
                 }
                 _cLog.Write("");
                 _cLog.Write("");
