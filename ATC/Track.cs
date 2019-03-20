@@ -41,8 +41,14 @@ namespace ATC
 
         public bool Equals(Track other)
         {
-            // Would still want to check for null etc. first.
-            return this._tag == other._tag;
+            if (this._tag == other._tag)
+            {
+                return true;
+            }
+
+            return false;
+
+        
         }
     }
 }

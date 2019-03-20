@@ -49,7 +49,21 @@ namespace UnitTests
             _fakeAirSpaceTracker.Received(3).IsInAirSpace(Arg.Any<IAirSpace>(), Arg.Any<ITrack>());
         }
 
-        
+
+        [Test]
+        public void Test_IsSeparationConditionCalled_OnUpdate()
+        {
+            string data1 = "ATR423; 39045; 12932; 14000; 20151006213456789";
+            string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
+
+            //ITrack track = new Track("ATR423", 39045, 12932, 14000, 1, 1, DateTime.Now);
+            // _fakeAirSpaceTracker.IsInAirSpace(_fakeAirSpace, _fakeTrack).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+          
+        }
 
 
 
