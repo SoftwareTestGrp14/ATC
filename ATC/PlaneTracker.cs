@@ -105,10 +105,10 @@ namespace ATC
                 }
               
 
-
                 //Handles separation
                 foreach (var curTrack in _tracks)
                 {
+                   
                     if (curTrack != newTrack)
                     {
 
