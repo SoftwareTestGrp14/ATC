@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="AirSpaceTest.cs" />
     <Compile Include="AirSpaceTrackerTest.cs" />
+    <Compile Include="TestATC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestATM.cs" />
     <Compile Include="TestCalculator.cs" />
