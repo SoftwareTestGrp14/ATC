@@ -24,9 +24,8 @@ namespace UnitTests3 {
         [Test]
         public void TestEqualsMethod()
         {
-           
-
-            //Assert.That();
+            SeparationCondition sc2 = Sepe
+            Assert.That();
         }
     }
 }
