@@ -11,8 +11,8 @@ namespace ATC
             _tag = tag;
             _xCord = xC;
             _yCord = yC;
-
-            if(_alt > 0 && _velocity > 0 && _course > 0 && _course < 360)
+            
+            if(alt > 0 && vel > 0 && course >= 0 && course < 360)
             {
                 _alt = alt;
                 _velocity = vel;
@@ -20,7 +20,8 @@ namespace ATC
             }
             else
             {
-                Console.WriteLine("Error. Unvalid value");
+                Console.WriteLine("Error. Invalid value");
+                Console.WriteLine($"alt: {_alt}, vel: {_velocity}, course: {_course}");
                 
             }
 
