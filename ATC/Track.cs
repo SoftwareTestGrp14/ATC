@@ -11,10 +11,22 @@ namespace ATC
             _tag = tag;
             _xCord = xC;
             _yCord = yC;
-            _alt = alt;
-            _velocity = vel;
-            _course = course;
+
+            if(_alt > 0 && _velocity > 0 && _course > 0 && _course < 360)
+            {
+                _alt = alt;
+                _velocity = vel;
+                _course = course;
+            }
+            else
+            {
+                Console.WriteLine("Error. Unvalid value");
+                
+            }
+
             _timestamp = ts;
+
+
         }
 
         public string _tag { get;  }
