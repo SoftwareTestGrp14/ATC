@@ -11,13 +11,13 @@ namespace ATC
     public class PlaneTracker : IPlaneTracker
     {
 
-        private List<ITrack> _tracks;
-        private IAirSpaceTracker _airSpaceTracker;
-        private IAirSpace _airSpace;
-        private List<string[]> tempDataList = new List<string[]>();
-        private List<ISeparationCondition> _currentSeparations;
-        ConsoleLog _cLog = new ConsoleLog();
-        FileLog _fLog = new FileLog();
+        public List<ITrack> _tracks { get; }
+        public IAirSpaceTracker _airSpaceTracker { get; }
+        public IAirSpace _airSpace { get; }
+        public List<string[]> tempDataList = new List<string[]>();
+        public List<ISeparationCondition> _currentSeparations { get; }
+        public ConsoleLog _cLog { get;}
+        public FileLog _fLog { get; }
 
         public PlaneTracker(IAirSpace airSpace, IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog)
         {
@@ -32,7 +32,7 @@ namespace ATC
 
         public void Update(string data)
         {
-            Console.Clear();
+           // Console.Clear();
             _cLog.Write(data);
             _cLog.Write("");
             //initializing temps
@@ -51,8 +51,9 @@ namespace ATC
                 
                 if (AircraftName[0] == newData[0])
                 {
-                    //If there the aircraft is already registered the new velocity and course is calculated and the data is overwritten
+                     //If there the aircraft is already registered the new velocity and course is calculated and the data is overwritten
                     vel = Calculator.CalcVelocity(int.Parse(AircraftName[1]), int.Parse(newData[1]), int.Parse(AircraftName[2]), int.Parse(newData[2]), DateTime.Parse(AircraftName[4]), DateTime.Parse(newData[4]));
+                    
                     course = Calculator.CalcCourse(int.Parse(AircraftName[1]), int.Parse(newData[1]), int.Parse(AircraftName[2]), int.Parse(newData[2]));
                     for (int j = 0; j < newData.Length; j++)
                     {
@@ -69,38 +70,43 @@ namespace ATC
                 //If the data did not exist then it is added to the list.
                 tempDataList.Add(newData);
             }
+            else
+            {
+               
                 
                 //The track is then created for the new data
-                ITrack newTrack = new Track(newData[0], int.Parse(newData[1]), int.Parse(newData[2]), int.Parse(newData[3]), vel , course, DateTime.Parse(newData[4]));
-
-
-
-                
+                ITrack newTrack = new Track(newData[0], int.Parse(newData[1]), int.Parse(newData[2]), int.Parse(newData[3]), vel, course, DateTime.Parse(newData[4]));
+                Console.WriteLine("TEST");
+                Console.WriteLine(_airSpaceTracker.IsInAirSpace(_airSpace, newTrack));
                 //checks if the new track is in the airspace
-                if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && !_tracks.Exists(x=>x._tag==newTrack._tag))
+                if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && !_tracks.Exists(x => x._tag == newTrack._tag))
                 {
+                    Console.WriteLine("1");
                     //The track is in the airspace and it is not in the list already, it will be added
                     _tracks.Add(newTrack);
                 }
-                else if (!_airSpaceTracker.IsInAirSpace(_airSpace,newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
+                else if (!_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
-                //The track is not in airspace but it is in the list already, it will be removed   
-                int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
-                _tracks.RemoveAt(index);
+                    Console.WriteLine("2");
+                    //The track is not in airspace but it is in the list already, it will be removed   
+                    int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
+                    _tracks.RemoveAt(index);
 
                 }
                 else if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
+                    Console.WriteLine("3");
                     //The track is in the airspace and is already in the list, it will be overwritten
-                    int index = _tracks.FindIndex(x=>x._tag == newTrack._tag);
+                    int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
                     _tracks.RemoveAt(index);
                     _tracks.Add(newTrack);
 
                 }
+                Console.WriteLine("TESTTEST");
 
-            
-            //Handles separation
-            foreach (var curTrack in _tracks)
+
+                //Handles separation
+                foreach (var curTrack in _tracks)
                 {
                     if (curTrack != newTrack)
                     {
@@ -145,24 +151,32 @@ namespace ATC
 
                 }
 
-            //Writes to log
-            _cLog.Write("");
-            _cLog.Write("All tracks in airspace :");
-            foreach (var track in _tracks)
-            {
-                _cLog.Write(track._tag);
-            }
-            _cLog.Write("");
-            _cLog.Write("");
+                //Writes to log
+                _cLog.Write("");
+                _cLog.Write("All tracks in airspace :");
+                foreach (var track in _tracks)
+                {
+                    _cLog.Write(track._tag);
+                }
+                _cLog.Write("");
+                _cLog.Write("");
 
-            _cLog.Write("");
-            _cLog.Write("All separations:");
-            foreach (var sep in _currentSeparations)
-            {
-                _cLog.Write($"Separation between: {sep._track2} and {sep._track2._tag}");
+                _cLog.Write("");
+                _cLog.Write("All separations:");
+                foreach (var sep in _currentSeparations)
+                {
+                    _cLog.Write($"Separation between: {sep._track2} and {sep._track2._tag}");
+                }
+                _cLog.Write("");
+                _cLog.Write("");
             }
-            _cLog.Write("");
-            _cLog.Write("");
+
+
+
+
+
+                
+
 
 
         }
@@ -176,12 +190,12 @@ namespace ATC
 
            
             //Rearranging the date and time to correct format
-            string year = separatedData[4].Substring(0, 4);
-            string month = separatedData[4].Substring(4, 2);
-            string day = separatedData[4].Substring(6, 2);
-            string hour = separatedData[4].Substring(8, 2);
-            string minute = separatedData[4].Substring(10, 2);
-            string second = separatedData[4].Substring(12, 2);
+            string year = separatedData[4].Substring(0, 5);
+            string month = separatedData[4].Substring(5, 2);
+            string day = separatedData[4].Substring(7, 2);
+            string hour = separatedData[4].Substring(9, 2);
+            string minute = separatedData[4].Substring(11, 2);
+            string second = separatedData[4].Substring(13, 2);
 
             string dateTime = $"{year}-{month}-{day} {hour}:{minute}:{second}";
 

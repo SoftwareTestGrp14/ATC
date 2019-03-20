@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ATC;
 using NUnit.Framework;
 using NSubstitute;
@@ -32,12 +33,17 @@ namespace UnitTests
         }
 
         [Test]
-        public void TestUpdateWithDataOutsideAirspace()
+        public void TestUpdateWithDataInsideAirspace()
         {
-            string data = "ATR423; 39045; 12932; 14000; 20151006213456789";
+            string data1 = "ATR423; 39045; 12932; 14000; 20151006213456789";
+            string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
 
-            _uut.Update(data);
-            //Assert.That();
+            //ITrack track = new Track("ATR423", 39045, 12932, 14000, DateTime.Now);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _fakeAirSpaceTracker.Received(1).IsInAirSpace(_fakeAirSpace, _uut._tracks[_uut._tracks.Count-1]);
         }
     }
 }
