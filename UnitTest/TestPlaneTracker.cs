@@ -260,7 +260,7 @@ namespace UnitTests
 
             _uut.Update(data5);
 
-            Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
+            Assert.That(_uut._currentSeparations[0].Timestamp.Year, Is.EqualTo(2016));
         }
 
     }
