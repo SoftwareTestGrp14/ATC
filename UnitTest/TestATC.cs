@@ -14,16 +14,12 @@ namespace UnitTest
     class TestATC
     {
         private ATC.ATC _uut;
-        private ATM atm;
-        private ITransponderReceiver _fakeTransponderReceiver;
-        private IPlaneTracker _fakePlaneTracker;
-
+        private IAtm atm;
+        
         [SetUp]
         public void Setup()
         {
-            _fakeTransponderReceiver = Substitute.For<ITransponderReceiver>();
-            _fakePlaneTracker = Substitute.For<IPlaneTracker>();
-            atm = new ATM(_fakePlaneTracker, _fakeTransponderReceiver);
+            atm = Substitute.For<IAtm>();
             _uut = new ATC.ATC(atm);
         }
 
@@ -36,9 +32,7 @@ namespace UnitTest
         [Test]
         public void ATMset_SetToNewATM_ATMgetEqNewATM()
         {
-            ITransponderReceiver _newFakeTransponderReceiver = Substitute.For<ITransponderReceiver>();
-            IPlaneTracker _newFakePlaneTracker = Substitute.For<IPlaneTracker>();
-            ATM newAtm = new ATM(_newFakePlaneTracker, _newFakeTransponderReceiver);
+            IAtm newAtm = Substitute.For<IAtm>();
             _uut.ATM = newAtm;
 
             Assert.That(_uut.ATM, Is.EqualTo(newAtm));
@@ -47,9 +41,7 @@ namespace UnitTest
         [Test]
         public void ATMset_SetToNewATM_ATMgetNotEqOldATM()
         {
-            ITransponderReceiver _newFakeTransponderReceiver = Substitute.For<ITransponderReceiver>();
-            IPlaneTracker _newFakePlaneTracker = Substitute.For<IPlaneTracker>();
-            ATM newAtm = new ATM(_newFakePlaneTracker, _newFakeTransponderReceiver);
+            IAtm newAtm = Substitute.For<IAtm>();
             _uut.ATM = newAtm;
 
             Assert.That(_uut.ATM, Is.Not.EqualTo(atm));
