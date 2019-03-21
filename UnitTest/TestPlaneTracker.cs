@@ -201,7 +201,7 @@ namespace UnitTests
             Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
         }
 
-        /*
+        
         [Test]
         public void Test_SeparationRemoveFromListWhen_NotIsSeparation()
         {
@@ -231,7 +231,7 @@ namespace UnitTests
             Assert.That(_uut._currentSeparations.Count, Is.EqualTo(0));
         }
 
-    */
+    
 
         [Test]
         public void Test_OverwriteSeparationWhen_IsSeparation()

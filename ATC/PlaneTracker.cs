@@ -119,9 +119,7 @@ namespace ATC
                         {
                             if (_currentSeparations.Count > 0)
                             {
-                                Console.WriteLine($"Comparing 1: {_currentSeparations[0]._track1._tag} 2: {_currentSeparations[0]._track2._tag} With 1: {newSeparationCondition._track1._tag} and 2:{newSeparationCondition._track2._tag}");
-                                Console.WriteLine($"HERE: {_currentSeparations[0]._track2._tag.Equals(newSeparationCondition._track2._tag)}");
-                                Console.WriteLine($"1: {_currentSeparations[0]._track2._tag} 2: {newSeparationCondition._track2._tag}");
+
 
                             }
 

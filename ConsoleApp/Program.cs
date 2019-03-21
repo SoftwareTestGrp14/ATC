@@ -11,15 +11,25 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            PlaneTracker pt = new PlaneTracker(new AirSpace(), new AirSpaceTracker(), new List<ISeparationCondition>(), new List<ITrack>(), new ConsoleLog(), new FileLog(), new Calculator());
-            pt.Update("ATR423; 39045; 12932; 14000; 20151006213456789");
-            pt.Update("ATR423; 39050; 12932; 14000; 20151006213656789");
+
+            Track track1 = new Track("ABC123", 100, 100, 1000, 1, 1, DateTime.Now);
+            Track track2 = new Track("DEF123", 90, 90, 900, 1, 1, DateTime.Now);
+
+            Track track3 = new Track("ABC123", 101, 101, 1000, 1, 1, DateTime.Now);
+            Track track4 = new Track("DEF123", 91, 91, 900, 1, 1, DateTime.Now);
+
+            SeparationCondition sep1 = new SeparationCondition(track1, track2);
+
+            SeparationCondition sep2 = new SeparationCondition(track1, track3);
 
 
-            pt.Update("ABC123; 38800; 12500; 13900; 20151006213456789");
-            pt.Update("ABC123; 38800; 12510; 13900; 20151006213656789");
 
-            pt.Update("ABC123; 38800; 12512; 13900; 20151006213856789");
+            Console.WriteLine("Comparing tracks:");
+            Console.WriteLine($"Track1: {track1.Equals(track3)}  Track2: {track2.Equals(track4)}");
+
+
+            Console.WriteLine("Comparing seps:");
+            Console.WriteLine(sep1.Equals(sep2));
         }
     }
 }

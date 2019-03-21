@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace ATC
@@ -27,8 +28,28 @@ namespace ATC
 
         public bool Equals(SeparationCondition other)
         {
-            // Would still want to check for null etc. first.
-            return ((this._track1.Equals(other._track1) && this._track2.Equals(other._track2)))||(this._track1.Equals(other._track2) && this._track2.Equals(other._track1));
+            bool result1 = true;
+            bool result2 = true;
+
+            for (int i = 0; i < this._track1._tag.Length; i++)
+            {
+                if (((this._track1._tag[i] != other._track1._tag[i]) || (this._track2._tag[i] != other._track2._tag[i])))
+                {
+                    result1 =false;
+
+                }
+            }
+
+            for (int i = 0; i < this._track1._tag.Length; i++)
+            {
+                if (((this._track1._tag[i] != other._track2._tag[i]) || (this._track2._tag[i] != other._track1._tag[i])))
+                {
+                    result2 = false;
+
+                }
+            }
+
+            return result1 | result2;
         }
 
     }
