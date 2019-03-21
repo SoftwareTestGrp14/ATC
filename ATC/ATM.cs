@@ -5,7 +5,7 @@ using TransponderReceiver;
 
 namespace ATC
 {
-    public class ATM
+    public class ATM : IAtm
     {
         private IPlaneTracker planeTracker;
         private ITransponderReceiver receiver;

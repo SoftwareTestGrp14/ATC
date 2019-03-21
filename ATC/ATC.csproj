@@ -59,6 +59,7 @@
     <Compile Include="FileLog.cs" />
     <Compile Include="IAirSpace.cs" />
     <Compile Include="IAirSpaceTracker.cs" />
+    <Compile Include="IATM.cs" />
     <Compile Include="ICalculator.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IPlaneTracker.cs" />

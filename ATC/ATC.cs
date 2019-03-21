@@ -6,16 +6,9 @@ namespace ATC
 {
     public class ATC
     {
+        public IAtm ATM { get; set; }
 
-        private ATM _atm;
-
-        public ATM ATM
-        {
-            get { return _atm; }
-            set { _atm = value; }
-        }
-
-        public ATC(ATM atm)
+        public ATC(IAtm atm)
         {
             ATM = atm;
         }
