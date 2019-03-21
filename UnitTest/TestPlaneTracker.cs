@@ -233,7 +233,35 @@ namespace UnitTests
 
     */
 
+        [Test]
+        public void Test_OverwriteSeparationWhen_IsSeparation()
+        {
 
+            string data1 = "ATR423; 39045; 12932; 14000; 20151006213456789";
+            string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
+
+            string data3 = "ABC123; 10000; 5000; 13900; 20151006213456789";
+            string data4 = "ABC123; 10000; 5000; 13900; 20151006213656789";
+
+            string data5 = "ABC123; 10000; 5000; 13900; 20161006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(_fakeAirSpace, Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+
+            _uut.Update(data5);
+
+            Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
+        }
 
     }
 }

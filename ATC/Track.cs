@@ -41,14 +41,8 @@ namespace ATC
 
         public bool Equals(Track other)
         {
-            if (this._tag == other._tag)
-            {
-                return true;
-            }
 
-            return false;
-
-        
+            return this._tag.Equals(other._tag);
         }
     }
 }
