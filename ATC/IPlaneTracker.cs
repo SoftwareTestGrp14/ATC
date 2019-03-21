@@ -9,7 +9,6 @@ namespace ATC
 
         List<ITrack> _tracks { get; }
         IAirSpaceTracker _airSpaceTracker { get; }
-        IAirSpace _airSpace { get; }
         List<ISeparationCondition> _currentSeparations { get; }
         ConsoleLog _cLog { get; }
         FileLog _fLog { get; }

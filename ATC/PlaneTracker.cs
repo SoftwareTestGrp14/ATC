@@ -13,21 +13,19 @@ namespace ATC
 
         public List<ITrack> _tracks { get; }
         public IAirSpaceTracker _airSpaceTracker { get; }
-        public IAirSpace _airSpace { get; }
         public List<string[]> tempDataList = new List<string[]>();
         public List<ISeparationCondition> _currentSeparations { get; }
         public ConsoleLog _cLog { get;}
         public FileLog _fLog { get; }
         public ICalculator _calc { get; }
 
-        public PlaneTracker(IAirSpace airSpace, IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc)
+        public PlaneTracker(IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc)
         {
             _cLog = cLog;
             _fLog = fLog;
             _tracks = tracks;
             _currentSeparations = currentSeparations;
             _airSpaceTracker = airSpaceTracker;
-            _airSpace = airSpace;
             _calc = calc;
         }
 
@@ -80,13 +78,13 @@ namespace ATC
                 ITrack newTrack = new Track(newData[0], int.Parse(newData[1]), int.Parse(newData[2]), int.Parse(newData[3]), vel, course, DateTime.Parse(newData[4]));
                 
                 //checks if the new track is in the airspace
-                if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && !_tracks.Exists(x => x._tag == newTrack._tag))
+                if (_airSpaceTracker.IsInAirSpace(newTrack) && !_tracks.Exists(x => x._tag == newTrack._tag))
                 {
                    
                     //The track is in the airspace and it is not in the list already, it will be added
                     _tracks.Add(newTrack);
                 }
-                else if (!_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
+                else if (!_airSpaceTracker.IsInAirSpace(newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
                     
                     //The track is not in airspace but it is in the list already, it will be removed   
@@ -94,7 +92,7 @@ namespace ATC
                     _tracks.RemoveAt(index);
 
                 }
-                else if (_airSpaceTracker.IsInAirSpace(_airSpace, newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
+                else if (_airSpaceTracker.IsInAirSpace(newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
                     
                     //The track is in the airspace and is already in the list, it will be overwritten

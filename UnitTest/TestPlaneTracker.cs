@@ -9,7 +9,6 @@ namespace UnitTests
     public class TestPlaneTracker
     {
         private PlaneTracker _uut;
-        private IAirSpace _fakeAirSpace;
         private IAirSpaceTracker _fakeAirSpaceTracker;
         private List<ISeparationCondition> _fakeCurrentSeparations;
         private List<ITrack> _fakeTracks;
@@ -23,7 +22,6 @@ namespace UnitTests
         [SetUp]
         public void Setup()
         {
-            _fakeAirSpace = Substitute.For<IAirSpace>();
             _fakeAirSpaceTracker = Substitute.For<IAirSpaceTracker>();
 
             _fakeCurrentSeparations = Substitute.For<List<ISeparationCondition>>();
@@ -33,7 +31,7 @@ namespace UnitTests
             _fakeTrack = Substitute.For<ITrack>();
             _fakeCalculator = Substitute.For<ICalculator>();
 
-            _uut =new PlaneTracker(_fakeAirSpace, _fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator);
+            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator);
         }
 
         [Test]
@@ -48,7 +46,7 @@ namespace UnitTests
             _uut.Update(data1); 
             _uut.Update(data2);
 
-            _fakeAirSpaceTracker.Received(3).IsInAirSpace(Arg.Any<IAirSpace>(), Arg.Any<ITrack>());
+            _fakeAirSpaceTracker.Received(3).IsInAirSpace(Arg.Any<ITrack>());
         }
 
 
@@ -93,7 +91,7 @@ namespace UnitTests
             string data3 = "ABC123; 10000; 5000; 10000; 20151006213456789";
             string data4 = "ABC123; 10000; 5000; 10000; 20151006213656789";
 
-            _fakeAirSpaceTracker.IsInAirSpace(_fakeAirSpace, Arg.Any<ITrack>()).Returns(true);
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
             _uut.Update(data1);
             _uut.Update(data2);
@@ -142,14 +140,14 @@ namespace UnitTests
             string data2 = "ATR423; 39045; 13500; 14000; 20151006213656789";
 
             //The track is in airspace
-            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<IAirSpace>(), Arg.Any<ITrack>()).Returns(true);
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
             //Data sendt
             _uut.Update(data1);
             _uut.Update(data2);
 
             //Track is not in airspace
-            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<IAirSpace>(), Arg.Any<ITrack>()).Returns(false);
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(false);
             _uut.Update(data1);
 
             Assert.That(_uut._tracks.Count, Is.EqualTo(0));
@@ -163,7 +161,7 @@ namespace UnitTests
             string data3 = "ATR423; 40000; 13500; 14000; 20151006213656789";
 
             //The track is in airspace
-            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<IAirSpace>(), Arg.Any<ITrack>()).Returns(true);
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
             //Data sendt
             _uut.Update(data1);
@@ -186,7 +184,7 @@ namespace UnitTests
             string data4 = "ABC123; 10000; 5000; 10000; 20151006213656789";
 
             //They are in airspace
-            _fakeAirSpaceTracker.IsInAirSpace(_fakeAirSpace, Arg.Any<ITrack>()).Returns(true);
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
             //There is separation
             _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
@@ -213,7 +211,7 @@ namespace UnitTests
             string data4 = "ABC123; 10000; 5000; 10000; 20151006213656789";
 
             //They are in airspace
-            _fakeAirSpaceTracker.IsInAirSpace(_fakeAirSpace, Arg.Any<ITrack>()).Returns(true);
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
             //There is separation
             _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
@@ -246,7 +244,7 @@ namespace UnitTests
             string data5 = "ABC123; 10000; 5000; 13900; 20161006213656789";
 
             //They are in airspace
-            _fakeAirSpaceTracker.IsInAirSpace(_fakeAirSpace, Arg.Any<ITrack>()).Returns(true);
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
             //There is separation
             _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);

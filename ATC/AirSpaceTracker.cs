@@ -6,7 +6,8 @@ namespace ATC
 {
     public class AirSpaceTracker : IAirSpaceTracker
     {
-        public bool IsInAirSpace(IAirSpace airSpace, ITrack track)
+        private IAirSpace airSpace = new AirSpace();
+        public bool IsInAirSpace(ITrack track)
         {
             
             if (track._alt < airSpace.MinAltitude || track._alt > airSpace.MaxAltitude)
