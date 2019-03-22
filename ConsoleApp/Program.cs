@@ -11,8 +11,9 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-
             Console.WriteLine(DateTime.Now);
+
+            ATC.ATC atc=new ATC.ATC(new ATM());
 
             while (true) { }
         }

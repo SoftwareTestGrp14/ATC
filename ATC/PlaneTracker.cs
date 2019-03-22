@@ -29,12 +29,21 @@ namespace ATC
             _calc = calc;
         }
 
+        public PlaneTracker()
+        {
+            _cLog = new ConsoleLog();
+            _fLog = new FileLog();
+            _tracks = new List<ITrack>();
+            _currentSeparations = new List<ISeparationCondition>();
+            _airSpaceTracker = new AirSpaceTracker();
+            _calc = new Calculator();
+
+        }
+
 
         public void Update(string data)
         {
-            
-            _cLog.Write(data);
-            _cLog.Write("");
+
             //initializing temps
             double vel=0;
             double course=0;
@@ -158,12 +167,13 @@ namespace ATC
 
                 }
 
+                Console.Clear();
                 //Writes to log
                 _cLog.Write("");
                 _cLog.Write("All tracks in airspace :");
                 foreach (var track in _tracks)
                 {
-                    _cLog.Write(track._tag);
+                    _cLog.Write($"Tag: {track._tag}, X,Y: {track._xCord},{track._yCord} Alt: {track._alt}, Vel: {track._velocity}M/s, Course: {track._course} ");
                 }
                 _cLog.Write("");
                 _cLog.Write("");
@@ -197,12 +207,12 @@ namespace ATC
 
            
             //Rearranging the date and time to correct format
-            string year = separatedData[4].Substring(0, 5);
-            string month = separatedData[4].Substring(5, 2);
-            string day = separatedData[4].Substring(7, 2);
-            string hour = separatedData[4].Substring(9, 2);
-            string minute = separatedData[4].Substring(11, 2);
-            string second = separatedData[4].Substring(13, 2);
+            string year = separatedData[4].Substring(0, 4);
+            string month = separatedData[4].Substring(4, 2);
+            string day = separatedData[4].Substring(6, 2);
+            string hour = separatedData[4].Substring(8, 2);
+            string minute = separatedData[4].Substring(10, 2);
+            string second = separatedData[4].Substring(12, 2);
 
             string dateTime = $"{year}-{month}-{day} {hour}:{minute}:{second}";
 
