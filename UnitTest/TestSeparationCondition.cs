@@ -4,7 +4,7 @@ using ATC;
 using NUnit.Framework;
 using NSubstitute;
 
-namespace UnitTests3 { 
+namespace UnitTest { 
     public class TestSeparationCondition
     {
         private ISeparationCondition _uut;

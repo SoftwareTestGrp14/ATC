@@ -4,7 +4,7 @@ using ATC;
 using NUnit.Framework;
 using NSubstitute;
 
-namespace UnitTests
+namespace UnitTest
 {
     public class TestPlaneTracker
     {

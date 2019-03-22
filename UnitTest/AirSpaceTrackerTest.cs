@@ -6,7 +6,7 @@ using NUnit.Framework;
 using NSubstitute;
 
 
-namespace UnitTests
+namespace UnitTest
 {
     [TestFixture]
     class AirSpaceTrackerTest

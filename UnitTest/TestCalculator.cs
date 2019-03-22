@@ -4,7 +4,7 @@ using System.Text;
 using ATC;
 using NUnit.Framework;
 
-namespace UnitTests
+namespace UnitTest
 {
     public class TestCalculator
     {
