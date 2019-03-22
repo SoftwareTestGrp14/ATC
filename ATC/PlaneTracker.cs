@@ -167,8 +167,9 @@ namespace ATC
 
                 }
 
-                Console.Clear();
+                
                 //Writes to log
+                
                 _cLog.Write("");
                 _cLog.Write("All tracks in airspace :");
                 foreach (var track in _tracks)
