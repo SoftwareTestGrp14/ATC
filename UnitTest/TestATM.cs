@@ -42,6 +42,17 @@ namespace UnitTest
         }
 
 
+        [Test]
+
+        public void Test_DefaultConstructor_Called()
+        {
+            _uut = new ATM();
+
+            Assert.That(_uut, Is.Not.EqualTo(null));
+
+        }
+
+
 
 
     }

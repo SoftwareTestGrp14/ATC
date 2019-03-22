@@ -259,5 +259,13 @@ namespace UnitTest
             Assert.That(_uut._currentSeparations[0].Timestamp.Year, Is.EqualTo(2016));
         }
 
+        [Test]
+        public void Test_DefaultConstructor_called()
+        {
+            _uut = new PlaneTracker();
+
+            Assert.That(_uut, Is.Not.EqualTo(null));
+        }
+
     }
 }
