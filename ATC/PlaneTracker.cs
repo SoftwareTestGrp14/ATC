@@ -20,13 +20,15 @@ namespace ATC
         public ICalculator _calc { get; }
 
         public ITracksManager _tracksManager { get; }
+        public ISeparationManager _separationManager;
 
-        public PlaneTracker(IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc, ITracksManager tracksManager)
+        public PlaneTracker(IAirSpaceTracker airSpaceTracker, ISeparationManager separationManager, List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc, ITracksManager tracksManager)
         {
             _cLog = cLog;
             _fLog = fLog;
             _tracks = tracks;
             _currentSeparations = currentSeparations;
+            _separationManager = separationManager;
             _airSpaceTracker = airSpaceTracker;
             _calc = calc;
             _tracksManager = tracksManager;
@@ -38,6 +40,7 @@ namespace ATC
             _fLog = new FileLog();
             _tracks = new List<ITrack>();
             _currentSeparations = new List<ISeparationCondition>();
+            _separationManager = new SeparationManager();
             _airSpaceTracker = new AirSpaceTracker();
             _calc = new Calculator();
             _tracksManager= new TracksManager();
@@ -129,17 +132,18 @@ namespace ATC
 
                         if (_calc.IsSeparation(curTrack, newTrack))
                         {
-                            if (_currentSeparations.Count > 0)
+                            if (_separationManager.IsNotEmpty(_currentSeparations))
                             {
-
-
+                                
                             }
 
                             //Separation detected on the two tracks
                             if (!_currentSeparations.Exists(x => x.Equals(newSeparationCondition)))
                             {
                                 //This separation was not previously registered and will be inserted in list
-                                _currentSeparations.Add(newSeparationCondition);
+                                _separationManager.AddSeparation(_currentSeparations, newSeparationCondition);
+
+                                //_currentSeparations.Add(newSeparationCondition);
                                 _fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
 
                             }
@@ -148,8 +152,10 @@ namespace ATC
                                 //This separation was previously registered and will overwrite existing
 
                                 int index = _currentSeparations.FindIndex(x => x.Equals(newSeparationCondition));
-                                _currentSeparations.RemoveAt(index);
-                                _currentSeparations.Add(newSeparationCondition);
+                                _separationManager.RemoveAt(_currentSeparations, index);
+                                //_currentSeparations.RemoveAt(index);
+                                _separationManager.AddSeparation(_currentSeparations, newSeparationCondition);
+                                //_currentSeparations.Add(newSeparationCondition);
                             }
 
                         }
@@ -162,7 +168,8 @@ namespace ATC
                                 
                                 //Separation was previously registered and will be removed
                                 int index = _currentSeparations.FindIndex(x => x.Equals(newSeparationCondition));
-                                _currentSeparations.RemoveAt(index);
+                                _separationManager.RemoveAt(_currentSeparations, index);
+                                //_currentSeparations.RemoveAt(index);
                             }
 
                             //If it was not registered then nothing needs to be done.

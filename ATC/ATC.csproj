@@ -65,11 +65,13 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="IPlaneTracker.cs" />
     <Compile Include="ISeparationCondition.cs" />
+    <Compile Include="ISeparationManager.cs" />
     <Compile Include="ITrack.cs" />
     <Compile Include="ITracksManager.cs" />
     <Compile Include="PlaneTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeparationCondition.cs" />
+    <Compile Include="SeparationManager.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="TracksManager.cs" />
   </ItemGroup>
