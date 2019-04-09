@@ -150,11 +150,11 @@ namespace UnitTest
             _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(false);
             _uut.Update(data1);
 
-            Assert.That(_uut._tracks.Count, Is.EqualTo(0));
+            _fakeTracksManager.Received().RemoveAt(Arg.Any<List<ITrack>>(), Arg.Any<int>());
         }
 
         [Test]
-        public void Test_OverwriteExcistingTrackInAirspace_()
+        public void Test_OverwriteExcistingTrackInAirspace_RemoveAtIsCalled()
         {
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
             string data2 = "ATR423;39045;13500;14000;20151006213656789";
@@ -170,7 +170,28 @@ namespace UnitTest
             //Data to overwrite with
             _uut.Update(data3);
 
-            Assert.That(_uut._tracks[0]._xCord, Is.EqualTo(40000));
+            _fakeTracksManager.Received().RemoveAt(Arg.Any<List<ITrack>>(), Arg.Any<int>());
+            
+        }
+        [Test]
+        public void Test_OverwriteExcistingTrackInAirspace_AddTrackIsCalled()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+            string data3 = "ATR423;40000;13500;14000;20151006213656789";
+
+            //The track is in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //Data sendt
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            //Data to overwrite with
+            _uut.Update(data3);
+
+            _fakeTracksManager.Received().AddTrack(Arg.Any<List<ITrack>>(), Arg.Any<ITrack>());
+
         }
 
         [Test]
