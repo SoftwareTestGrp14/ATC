@@ -11,26 +11,24 @@ namespace ATC
     public class PlaneTracker : IPlaneTracker
     {
 
-        public List<ITrack> _tracks { get; set; }
+        public List<ITrack> _tracks { get; }
         public IAirSpaceTracker _airSpaceTracker { get; }
         public List<string[]> tempDataList = new List<string[]>();
-        //public List<ISeparationCondition> _currentSeparations { get; }
-        public ConsoleLog _cLog { get;}
+        public List<ISeparationCondition> _currentSeparations { get; }
+        public ConsoleLog _cLog { get; }
         public FileLog _fLog { get; }
         public ICalculator _calc { get; }
 
-        public ITracksManager _tracksManager { get; }
-        public ISeparationManager _separationManager;
 
-        public PlaneTracker(IAirSpaceTracker airSpaceTracker, ISeparationManager separationManager, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc, ITracksManager tracksManager)
+
+        public PlaneTracker(IAirSpaceTracker airSpaceTracker, List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc)
         {
             _cLog = cLog;
             _fLog = fLog;
             _tracks = tracks;
-            _separationManager = separationManager;
+            _currentSeparations = currentSeparations;
             _airSpaceTracker = airSpaceTracker;
             _calc = calc;
-            _tracksManager = tracksManager;
         }
 
         public PlaneTracker()
@@ -38,12 +36,12 @@ namespace ATC
             _cLog = new ConsoleLog();
             _fLog = new FileLog();
             _tracks = new List<ITrack>();
-            _separationManager = new SeparationManager();
+            _currentSeparations = new List<ISeparationCondition>();
             _airSpaceTracker = new AirSpaceTracker();
             _calc = new Calculator();
-            _tracksManager= new TracksManager();
 
         }
+
 
 
         public void Update(string data)
@@ -86,42 +84,41 @@ namespace ATC
             }
             else
             {
-               
-                
+
+
                 //The track is then created for the new data
                 ITrack newTrack = new Track(newData[0], int.Parse(newData[1]), int.Parse(newData[2]), int.Parse(newData[3]), vel, course, DateTime.Parse(newData[4]));
-                
+
                 //checks if the new track is in the airspace
                 if (_airSpaceTracker.IsInAirSpace(newTrack) && !_tracks.Exists(x => x._tag == newTrack._tag))
                 {
 
                     //The track is in the airspace and it is not in the list already, it will be added
-                    _tracksManager.AddTrack(_tracks, newTrack);
+                    _tracks.Add(newTrack);
                 }
                 else if (!_airSpaceTracker.IsInAirSpace(newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
-                    
+
                     //The track is not in airspace but it is in the list already, it will be removed   
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
-                    _tracks = _tracksManager.RemoveAt( _tracks, index);
+                    _tracks.RemoveAt(index);
 
                 }
                 else if (_airSpaceTracker.IsInAirSpace(newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
-                    
+
                     //The track is in the airspace and is already in the list, it will be overwritten
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
-                    _tracks = _tracksManager.RemoveAt(_tracks, index);
-                     _tracksManager.AddTrack(_tracks, newTrack);
-                    
+                    _tracks.RemoveAt(index);
+                    _tracks.Add(newTrack);
 
                 }
-              
+
 
                 //Handles separation
                 foreach (var curTrack in _tracks)
                 {
-                   
+
                     if (curTrack != newTrack)
                     {
 
@@ -130,19 +127,17 @@ namespace ATC
 
                         if (_calc.IsSeparation(curTrack, newTrack))
                         {
-                            if (_separationManager.IsNotEmpty())
+                            if (_currentSeparations.Count > 0)
                             {
-                                
+
+
                             }
 
                             //Separation detected on the two tracks
-                            if (!_separationManager.GetSeparationList().Exists(x => x.Equals(newSeparationCondition)))
+                            if (!_currentSeparations.Exists(x => x.Equals(newSeparationCondition)))
                             {
                                 //This separation was not previously registered and will be inserted in list
-
-                                _separationManager.AddSeparation(newSeparationCondition);
-
-                                //_currentSeparations.Add(newSeparationCondition);
+                                _currentSeparations.Add(newSeparationCondition);
                                 _fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
 
                             }
@@ -150,26 +145,24 @@ namespace ATC
                             {
                                 //This separation was previously registered and will overwrite existing
 
-                                int index = _separationManager.GetSeparationList().FindIndex(x => x.Equals(newSeparationCondition));
-                                _separationManager.RemoveAt(index);
-                                //_currentSeparations.RemoveAt(index);
-                                _separationManager.AddSeparation(newSeparationCondition);
-                                //_currentSeparations.Add(newSeparationCondition);
+                                int index = _currentSeparations.FindIndex(x => x.Equals(newSeparationCondition));
+                                _currentSeparations.RemoveAt(index);
+                                _currentSeparations.Add(newSeparationCondition);
                             }
 
                         }
                         else
                         {
-                            
+
                             //Separation not detected on the two tracks
-                            if (_separationManager.GetSeparationList().Exists(x => x.Equals(newSeparationCondition)))
+                            if (_currentSeparations.Exists(x => x.Equals(newSeparationCondition)))
                             {
-                                
+
                                 //Separation was previously registered and will be removed
-                                int index = _separationManager.GetSeparationList().FindIndex(x => x.Equals(newSeparationCondition));
-                                _separationManager.RemoveAt(index);
-                                //_currentSeparations.RemoveAt(index);
+                                int index = _currentSeparations.FindIndex(x => x.Equals(newSeparationCondition));
+                                _currentSeparations.RemoveAt(index);
                             }
+
 
                             //If it was not registered then nothing needs to be done.
                         }
@@ -178,9 +171,9 @@ namespace ATC
 
                 }
 
-                
+
                 //Writes to log
-                
+
                 _cLog.Write("");
                 _cLog.Write("All tracks in airspace :");
                 foreach (var track in _tracks)
@@ -192,7 +185,7 @@ namespace ATC
 
                 _cLog.Write("");
                 _cLog.Write("All separations:");
-                foreach (var sep in _separationManager.GetSeparationList())
+                foreach (var sep in _currentSeparations)
                 {
                     _cLog.Write($"Separation between: {sep._track1._tag} and {sep._track2._tag}");
                 }
