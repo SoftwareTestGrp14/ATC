@@ -17,6 +17,7 @@ namespace UnitTest
         private ITrack _fakeTrack;
         private ICalculator _fakeCalculator;
         private ITracksManager _fakeTracksManager;
+        private ISeparationManager _fakeSeparationManager;
 
 
 
@@ -32,8 +33,9 @@ namespace UnitTest
             _fakeTrack = Substitute.For<ITrack>();
             _fakeCalculator = Substitute.For<ICalculator>();
             _fakeTracksManager = Substitute.For<ITracksManager>();
+            _fakeSeparationManager = Substitute.For<ISeparationManager>();
 
-            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator, _fakeTracksManager);
+            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeSeparationManager,_fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator, _fakeTracksManager);
         }
 
         [Test]
@@ -203,7 +205,7 @@ namespace UnitTest
 
             string data3 = "ABC123;10000;5000;10000;20151006213456789";
             string data4 = "ABC123;10000;5000;10000;20151006213656789";
-
+            
             //They are in airspace
             _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
@@ -216,8 +218,8 @@ namespace UnitTest
             _uut.Update(data3);
             _uut.Update(data4);
 
-
-            Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
+            _fakeSeparationManager.Received().AddSeparation(Arg.Any<List<ISeparationCondition>>(), Arg.Any<ISeparationCondition>());
+            //Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
         }
 
         
@@ -247,7 +249,8 @@ namespace UnitTest
             _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(false);
             _uut.Update(data4);
 
-            Assert.That(_uut._currentSeparations.Count, Is.EqualTo(0));
+            _fakeSeparationManager.Received().RemoveAt(Arg.Any<List<ISeparationCondition>>(), Arg.Any<int>());
+            //Assert.That(_uut._currentSeparations.Count, Is.EqualTo(0));
         }
 
     
