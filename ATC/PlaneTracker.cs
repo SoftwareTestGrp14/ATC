@@ -214,8 +214,9 @@ namespace ATC
             string hour = separatedData[4].Substring(8, 2);
             string minute = separatedData[4].Substring(10, 2);
             string second = separatedData[4].Substring(12, 2);
+            string mSecond = separatedData[4].Substring(14, 3);
 
-            string dateTime = $"{year}-{month}-{day} {hour}:{minute}:{second}";
+            string dateTime = $"{year}-{month}-{day} {hour}:{minute}:{second}.{mSecond}";
 
             separatedData[4] = dateTime;
 
