@@ -10,7 +10,6 @@ namespace UnitTest
     {
         private PlaneTracker _uut;
         private IAirSpaceTracker _fakeAirSpaceTracker;
-        private List<ISeparationCondition> _fakeCurrentSeparations;
         private List<ITrack> _fakeTracks;
         private ConsoleLog _fakeConsole;
         private FileLog _fakeFile;
@@ -25,8 +24,7 @@ namespace UnitTest
         public void Setup()
         {
             _fakeAirSpaceTracker = Substitute.For<IAirSpaceTracker>();
-
-            _fakeCurrentSeparations = Substitute.For<List<ISeparationCondition>>();
+            
             _fakeTracks = Substitute.For<List<ITrack>>();
             _fakeFile = Substitute.For<FileLog>();
             _fakeConsole = Substitute.For<ConsoleLog>();
@@ -35,7 +33,7 @@ namespace UnitTest
             _fakeTracksManager = Substitute.For<ITracksManager>();
             _fakeSeparationManager = Substitute.For<ISeparationManager>();
 
-            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeSeparationManager,_fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator, _fakeTracksManager);
+            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeSeparationManager, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator, _fakeTracksManager);
         }
 
         [Test]
@@ -218,7 +216,7 @@ namespace UnitTest
             _uut.Update(data3);
             _uut.Update(data4);
 
-            _fakeSeparationManager.Received().AddSeparation(Arg.Any<List<ISeparationCondition>>(), Arg.Any<ISeparationCondition>());
+            _fakeSeparationManager.Received().AddSeparation(Arg.Any<ISeparationCondition>());
             //Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
         }
 
@@ -249,7 +247,7 @@ namespace UnitTest
             _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(false);
             _uut.Update(data4);
 
-            _fakeSeparationManager.Received().RemoveAt(Arg.Any<List<ISeparationCondition>>(), Arg.Any<int>());
+            _fakeSeparationManager.Received().RemoveAt(Arg.Any<int>());
             //Assert.That(_uut._currentSeparations.Count, Is.EqualTo(0));
         }
 
@@ -283,9 +281,9 @@ namespace UnitTest
             _uut.Update(data5);
 
             _fakeSeparationManager.ReceivedWithAnyArgs()
-                .RemoveAt(Arg.Any<List<ISeparationCondition>>(), Arg.Any<int>());
+                .RemoveAt(Arg.Any<int>());
 
-            _fakeSeparationManager.ReceivedWithAnyArgs().AddSeparation(Arg.Any<List<ISeparationCondition>>(), Arg.Any<ISeparationCondition>());
+            _fakeSeparationManager.ReceivedWithAnyArgs().AddSeparation(Arg.Any<ISeparationCondition>());
 
             //Assert.That(_uut._currentSeparations[0].Timestamp.Year, Is.EqualTo(2016));
         }

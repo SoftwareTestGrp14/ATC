@@ -8,23 +8,35 @@ namespace ATC
 {
     public class SeparationManager : ISeparationManager
     {
-        public void AddSeparation(List<ISeparationCondition> tracks, ISeparationCondition track)
+        private readonly List<ISeparationCondition> _currentSeparations;
+
+        public SeparationManager()
         {
-            tracks.Add(track);
+            _currentSeparations = new List<ISeparationCondition>();
+        }
+
+        public void AddSeparation(ISeparationCondition track)
+        {
+            _currentSeparations.Add(track);
 
             //return tracks;
         }
 
-        public void RemoveAt(List<ISeparationCondition> tracks, int index)
+        public void RemoveAt(int index)
         {
-            tracks.RemoveAt(index);
+            _currentSeparations.RemoveAt(index);
 
             //return tracks;
         }
 
-        public bool IsNotEmpty(List<ISeparationCondition> tracks)
+        public bool IsNotEmpty()
         {
-            return tracks.Count > 0;
+            return _currentSeparations.Count > 0;
+        }
+
+        public List<ISeparationCondition> GetSeparationList()
+        {
+            return _currentSeparations;
         }
 
 
