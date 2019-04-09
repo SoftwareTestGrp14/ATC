@@ -31,6 +31,7 @@ namespace UnitTest
             _fakeTrack = Substitute.For<ITrack>();
             _fakeCalculator = Substitute.For<ICalculator>();
 
+
             _uut = new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator);
         }
 
@@ -132,7 +133,7 @@ namespace UnitTest
         }
 
         [Test]
-        public void Test_RemoveTrackNotInAirspace_ListEmpty()
+        public void Test_RemoveTrackNotInAirspace_IsInAirSpaceCalledThreeTimes()
         {
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
             string data2 = "ATR423;39045;13500;14000;20151006213656789";
@@ -146,13 +147,17 @@ namespace UnitTest
 
             //Track is not in airspace
             _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(false);
+ 
+
             _uut.Update(data1);
 
-            Assert.That(_uut._tracks.Count, Is.EqualTo(0));
+            //Tester på hvor mange gange funktionen IsInAirSpace burde blive kaldt i den situation
+            _fakeAirSpaceTracker.Received(3).IsInAirSpace(Arg.Any<ITrack>());
         }
 
+
         [Test]
-        public void Test_OverwriteExcistingTrackInAirspace_()
+        public void Test_OverwriteExcistingTrackInAirspace_IsInAirSpaceCalledFourTimes()
         {
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
             string data2 = "ATR423;39045;13500;14000;20151006213656789";
@@ -168,7 +173,8 @@ namespace UnitTest
             //Data to overwrite with
             _uut.Update(data3);
 
-            Assert.That(_uut._tracks[0]._xCord, Is.EqualTo(40000));
+            //Tester på hvor mange gange funktionen IsInAirSpace burde blive kaldt i den situation
+            _fakeAirSpaceTracker.Received(4).IsInAirSpace(Arg.Any<ITrack>());
         }
 
 
@@ -194,8 +200,7 @@ namespace UnitTest
             _uut.Update(data3);
             _uut.Update(data4);
 
-
-            Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
+            _fakeCalculator.Received(1).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
         }
 
 
@@ -226,7 +231,7 @@ namespace UnitTest
             _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(false);
             _uut.Update(data4);
 
-            Assert.That(_uut._currentSeparations.Count, Is.EqualTo(0));
+            _fakeCalculator.Received(2).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
         }
 
 
@@ -258,7 +263,7 @@ namespace UnitTest
 
             _uut.Update(data5);
 
-            Assert.That(_uut._currentSeparations[0].Timestamp.Year, Is.EqualTo(2016));
+            _fakeCalculator.Received(2).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
         }
         [Test]
         public void Test_DefaultConstructor_called()
