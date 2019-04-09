@@ -23,10 +23,10 @@ namespace ATC
 
         public List<ITrack> AddTrack(List<ITrack> tracks, ITrack track)
         {
+
             tracks.Add(track);
 
             return tracks;
-
         }
 
 

@@ -11,7 +11,7 @@ namespace ATC
     public class PlaneTracker : IPlaneTracker
     {
 
-        public List<ITrack> _tracks { get; }
+        public List<ITrack> _tracks { get; set; }
         public IAirSpaceTracker _airSpaceTracker { get; }
         public List<string[]> tempDataList = new List<string[]>();
         public List<ISeparationCondition> _currentSeparations { get; }
@@ -96,7 +96,7 @@ namespace ATC
                 //checks if the new track is in the airspace
                 if (_airSpaceTracker.IsInAirSpace(newTrack) && !_tracks.Exists(x => x._tag == newTrack._tag))
                 {
-                   
+
                     //The track is in the airspace and it is not in the list already, it will be added
                     _tracksManager.AddTrack(_tracks, newTrack);
                 }
@@ -105,7 +105,7 @@ namespace ATC
                     
                     //The track is not in airspace but it is in the list already, it will be removed   
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
-                    _tracksManager.RemoveAt(_tracks, index);
+                    _tracks = _tracksManager.RemoveAt( _tracks, index);
 
                 }
                 else if (_airSpaceTracker.IsInAirSpace(newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
@@ -113,9 +113,9 @@ namespace ATC
                     
                     //The track is in the airspace and is already in the list, it will be overwritten
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
-                    _tracksManager.RemoveAt(_tracks, index);
-                    _tracksManager.AddTrack(_tracks, newTrack);
-
+                    _tracks = _tracksManager.RemoveAt(_tracks, index);
+                     _tracksManager.AddTrack(_tracks, newTrack);
+                    
 
                 }
               
