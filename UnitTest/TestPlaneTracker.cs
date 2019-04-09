@@ -16,6 +16,7 @@ namespace UnitTest
         private FileLog _fakeFile;
         private ITrack _fakeTrack;
         private ICalculator _fakeCalculator;
+        private ITracksManager _fakeTracksManager;
 
 
 
@@ -30,8 +31,9 @@ namespace UnitTest
             _fakeConsole = Substitute.For<ConsoleLog>();
             _fakeTrack = Substitute.For<ITrack>();
             _fakeCalculator = Substitute.For<ICalculator>();
+            _fakeTracksManager = Substitute.For<ITracksManager>();
 
-            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator);
+            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator, _fakeTracksManager);
         }
 
         [Test]

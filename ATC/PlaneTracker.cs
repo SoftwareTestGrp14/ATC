@@ -19,7 +19,9 @@ namespace ATC
         public FileLog _fLog { get; }
         public ICalculator _calc { get; }
 
-        public PlaneTracker(IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc)
+        public ITracksManager _tracksManager { get; }
+
+        public PlaneTracker(IAirSpaceTracker airSpaceTracker,List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc, ITracksManager tracksManager)
         {
             _cLog = cLog;
             _fLog = fLog;
@@ -27,6 +29,7 @@ namespace ATC
             _currentSeparations = currentSeparations;
             _airSpaceTracker = airSpaceTracker;
             _calc = calc;
+            _tracksManager = tracksManager;
         }
 
         public PlaneTracker()
@@ -37,6 +40,7 @@ namespace ATC
             _currentSeparations = new List<ISeparationCondition>();
             _airSpaceTracker = new AirSpaceTracker();
             _calc = new Calculator();
+            _tracksManager= new TracksManager();
 
         }
 
@@ -91,14 +95,14 @@ namespace ATC
                 {
                    
                     //The track is in the airspace and it is not in the list already, it will be added
-                    _tracks.Add(newTrack);
+                    _tracksManager.AddTrack(_tracks, newTrack);
                 }
                 else if (!_airSpaceTracker.IsInAirSpace(newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
                 {
                     
                     //The track is not in airspace but it is in the list already, it will be removed   
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
-                    _tracks.RemoveAt(index);
+                    _tracksManager.RemoveAt(_tracks, index);
 
                 }
                 else if (_airSpaceTracker.IsInAirSpace(newTrack) && _tracks.Exists(x => x._tag == newTrack._tag))
@@ -106,8 +110,9 @@ namespace ATC
                     
                     //The track is in the airspace and is already in the list, it will be overwritten
                     int index = _tracks.FindIndex(x => x._tag == newTrack._tag);
-                    _tracks.RemoveAt(index);
-                    _tracks.Add(newTrack);
+                    _tracksManager.RemoveAt(_tracks, index);
+                    _tracksManager.AddTrack(_tracks, newTrack);
+
 
                 }
               
@@ -221,7 +226,6 @@ namespace ATC
             separatedData[4] = dateTime;
 
             return separatedData;
-
         }
 
     }
