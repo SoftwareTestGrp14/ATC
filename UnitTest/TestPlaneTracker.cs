@@ -180,7 +180,7 @@ namespace UnitTest
 
             string data3 = "ABC123;10000;5000;10000;20151006213456789";
             string data4 = "ABC123;10000;5000;10000;20151006213656789";
-
+            
             //They are in airspace
             _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
