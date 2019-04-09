@@ -15,7 +15,7 @@ namespace ATC
             
             return (distance / timeDiff.TotalSeconds);
         }
-
+        
         public double CalcCourse(int xCord1, int xCord2, int yCord1, int yCord2)
         {
             int xDiff = xCord2 - xCord1;
