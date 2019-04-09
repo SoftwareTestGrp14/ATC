@@ -13,7 +13,7 @@ namespace ATC
             int yDiff = yCord2 - yCord1;
             double distance = Math.Sqrt(Math.Pow(yDiff, 2) + Math.Pow(xDiff, 2));
             
-            return (distance / timeDiff.TotalSeconds);
+            return (distance / (timeDiff.TotalMilliseconds/1000));
         }
 
         public double CalcCourse(int xCord1, int xCord2, int yCord1, int yCord2)
