@@ -261,7 +261,12 @@ namespace UnitTest
 
             _uut.Update(data5);
 
-            Assert.That(_uut._currentSeparations[0].Timestamp.Year, Is.EqualTo(2016));
+            _fakeSeparationManager.ReceivedWithAnyArgs()
+                .RemoveAt(Arg.Any<List<ISeparationCondition>>(), Arg.Any<int>());
+
+            _fakeSeparationManager.ReceivedWithAnyArgs().AddSeparation(Arg.Any<List<ISeparationCondition>>(), Arg.Any<ISeparationCondition>());
+
+            //Assert.That(_uut._currentSeparations[0].Timestamp.Year, Is.EqualTo(2016));
         }
 
         [Test]

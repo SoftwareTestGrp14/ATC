@@ -8,9 +8,9 @@ namespace ATC
 {
     public interface ISeparationManager
     {
-        List<ISeparationCondition> RemoveAt(List<ISeparationCondition> tracks, int index);
+        void RemoveAt(List<ISeparationCondition> tracks, int index);
 
-        List<ISeparationCondition> AddSeparation(List<ISeparationCondition> tracks, ISeparationCondition track);
+        void AddSeparation(List<ISeparationCondition> tracks, ISeparationCondition track);
 
         bool IsNotEmpty(List<ISeparationCondition> tracks);
 
