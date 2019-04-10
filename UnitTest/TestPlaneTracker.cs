@@ -50,6 +50,19 @@ namespace UnitTest
             _fakeAirSpaceTracker.Received(3).IsInAirSpace(Arg.Any<ITrack>());
         }
 
+        [Test]
+        public void Test_IsInAirSpaceCalled_IsCalledWithRightParameters()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+
+            _uut.Update(data1); 
+            _uut.Update(data2);
+
+            _fakeAirSpaceTracker.Received().IsInAirSpace(Arg.Is<ITrack>(x=>x._tag== "ATR423"));
+        }
+
 
         [Test]
         public void Test_fLog_write_called_OnUpdate()
@@ -105,6 +118,40 @@ namespace UnitTest
         }
 
         [Test]
+        public void Test_IsSeparationWithParameters_Called_OnUpdate()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;10000;20151006213456789";
+            string data4 = "ABC123;10000;5000;10000;20151006213656789";
+
+            _fakeCalculator.CalcCourse(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>()).Returns(1);
+            _fakeCalculator.CalcVelocity(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(),
+                Arg.Any<DateTime>(), Arg.Any<DateTime>()).Returns(1);
+
+            double velocity = _fakeCalculator.CalcVelocity(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(),
+                Arg.Any<int>(),
+                Arg.Any<DateTime>(), Arg.Any<DateTime>());
+
+            double course = _fakeCalculator.CalcCourse(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>());
+
+            Track track1 = new Track("ATR423", 39045, 13500,14000, velocity,course, DateTime.Now);
+            Track track2 = new Track("ABC123", 10000, 5000, 10000, velocity, course, DateTime.Now);
+
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+            _fakeCalculator.Received().IsSeparation(Arg.Is<ITrack>(x=>x._tag==track1._tag), Arg.Is<ITrack>(y=>y._tag==track2._tag));
+
+        }
+
+        [Test]
         public void Test_CalcVelocity_Called_OnUpdate()
         {
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
@@ -115,6 +162,21 @@ namespace UnitTest
             _uut.Update(data2);
 
             _fakeCalculator.Received().CalcVelocity(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(),
+                Arg.Any<DateTime>(), Arg.Any<DateTime>());
+
+        }
+
+        [TestCase(39045, 39045, 12932, 13500)]
+        public void Test_CalcVelocity_Called_OnUpdate(int x1, int x2, int y1, int y2)
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _fakeCalculator.Received().CalcVelocity(x1,x2,y1,y2,
                 Arg.Any<DateTime>(), Arg.Any<DateTime>());
 
         }
@@ -131,6 +193,21 @@ namespace UnitTest
             _uut.Update(data2);
 
             _fakeCalculator.Received().CalcCourse(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>());
+
+        }
+
+        [TestCase(39045, 39045, 12932, 13500)]
+        
+        public void Test_CalcCourse_Called_OnUpdate(int x1, int x2, int y1, int y2)
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _fakeCalculator.Received().CalcCourse(x1,x2,y1,y2);
 
         }
 
