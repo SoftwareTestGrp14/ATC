@@ -50,6 +50,19 @@ namespace UnitTest
             _fakeAirSpaceTracker.Received(3).IsInAirSpace(Arg.Any<ITrack>());
         }
 
+        [Test]
+        public void Test_IsInAirSpaceCalled_IsCalledWithRightParameters()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+
+            _uut.Update(data1); 
+            _uut.Update(data2);
+
+            _fakeAirSpaceTracker.Received().IsInAirSpace(Arg.Is<ITrack>(x=>x._tag== "ATR423"));
+        }
+
 
         [Test]
         public void Test_fLog_write_called_OnUpdate()
