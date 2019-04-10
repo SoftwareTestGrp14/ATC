@@ -595,6 +595,7 @@ namespace UnitTest
 
         }
 
+        [Test]
         public void Test_SeparationRemoveFromListWhen_ConsoleRenderCalledWithSepCondListCount_0()
         {
 
