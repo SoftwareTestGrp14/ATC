@@ -65,6 +65,7 @@
     <Compile Include="TestCalculator.cs" />
     <Compile Include="TestConsoleRenderer.cs" />
     <Compile Include="TestFileLog.cs" />
+    <Compile Include="TestFileRender.cs" />
     <Compile Include="TestPlaneTracker.cs" />
     <Compile Include="TestSeparationCondition.cs" />
     <Compile Include="TestTrack.cs" />
