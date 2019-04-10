@@ -16,6 +16,7 @@ namespace UnitTest
         private FileLog _fakeFile;
         private ITrack _fakeTrack;
         private ICalculator _fakeCalculator;
+       // private ISeparationCondition _fakeSeparationCondition;
 
 
 
@@ -30,6 +31,7 @@ namespace UnitTest
             _fakeConsole = Substitute.For<ConsoleLog>();
             _fakeTrack = Substitute.For<ITrack>();
             _fakeCalculator = Substitute.For<ICalculator>();
+            //_fakeSeparationCondition = Substitute.For<ISeparationCondition>();
 
 
             _uut = new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator);
@@ -177,9 +179,9 @@ namespace UnitTest
             _fakeAirSpaceTracker.Received(4).IsInAirSpace(Arg.Any<ITrack>());
         }
 
-
+        
         [Test]
-        public void Test_SeparationAddedToListWhen_IsSeparation()
+        public void Test_IsSeparation_IsSeparationCalledOnceWhenTwoTracksInList()
         {
 
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
@@ -201,9 +203,12 @@ namespace UnitTest
             _uut.Update(data4);
 
             _fakeCalculator.Received(1).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
+          
         }
+        
+     
 
-
+    
 
         [Test]
         public void Test_SeparationRemoveFromListWhen_NotIsSeparation()
