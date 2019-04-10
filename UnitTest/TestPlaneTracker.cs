@@ -10,13 +10,13 @@ namespace UnitTest
     {
         private PlaneTracker _uut;
         private IAirSpaceTracker _fakeAirSpaceTracker;
+        private List<ISeparationCondition> _fakeCurrentSeparations;
         private List<ITrack> _fakeTracks;
         private ConsoleLog _fakeConsole;
         private FileLog _fakeFile;
         private ITrack _fakeTrack;
         private ICalculator _fakeCalculator;
-        private ITracksManager _fakeTracksManager;
-        private ISeparationManager _fakeSeparationManager;
+       // private ISeparationCondition _fakeSeparationCondition;
 
 
 
@@ -24,16 +24,17 @@ namespace UnitTest
         public void Setup()
         {
             _fakeAirSpaceTracker = Substitute.For<IAirSpaceTracker>();
-            
+
+            _fakeCurrentSeparations = Substitute.For<List<ISeparationCondition>>();
             _fakeTracks = Substitute.For<List<ITrack>>();
             _fakeFile = Substitute.For<FileLog>();
             _fakeConsole = Substitute.For<ConsoleLog>();
             _fakeTrack = Substitute.For<ITrack>();
             _fakeCalculator = Substitute.For<ICalculator>();
-            _fakeTracksManager = Substitute.For<ITracksManager>();
-            _fakeSeparationManager = Substitute.For<ISeparationManager>();
+            //_fakeSeparationCondition = Substitute.For<ISeparationCondition>();
 
-            _uut =new PlaneTracker(_fakeAirSpaceTracker, _fakeSeparationManager, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator, _fakeTracksManager);
+
+            _uut = new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator);
         }
 
         [Test]
@@ -134,7 +135,7 @@ namespace UnitTest
         }
 
         [Test]
-        public void Test_RemoveTrackNotInAirspace_ListEmpty()
+        public void Test_RemoveTrackNotInAirspace_IsInAirSpaceCalledThreeTimes()
         {
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
             string data2 = "ATR423;39045;13500;14000;20151006213656789";
@@ -148,13 +149,17 @@ namespace UnitTest
 
             //Track is not in airspace
             _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(false);
+ 
+
             _uut.Update(data1);
 
-            _fakeTracksManager.Received().RemoveAt(Arg.Any<List<ITrack>>(), Arg.Any<int>());
+            //Tester på hvor mange gange funktionen IsInAirSpace burde blive kaldt i den situation
+            _fakeAirSpaceTracker.Received(3).IsInAirSpace(Arg.Any<ITrack>());
         }
 
+
         [Test]
-        public void Test_OverwriteExcistingTrackInAirspace_RemoveAtIsCalled()
+        public void Test_OverwriteExcistingTrackInAirspace_IsInAirSpaceCalledFourTimes()
         {
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
             string data2 = "ATR423;39045;13500;14000;20151006213656789";
@@ -170,32 +175,13 @@ namespace UnitTest
             //Data to overwrite with
             _uut.Update(data3);
 
-            _fakeTracksManager.Received().RemoveAt(Arg.Any<List<ITrack>>(), Arg.Any<int>());
-            
-        }
-        [Test]
-        public void Test_OverwriteExcistingTrackInAirspace_AddTrackIsCalled()
-        {
-            string data1 = "ATR423;39045;12932;14000;20151006213456789";
-            string data2 = "ATR423;39045;13500;14000;20151006213656789";
-            string data3 = "ATR423;40000;13500;14000;20151006213656789";
-
-            //The track is in airspace
-            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
-
-            //Data sendt
-            _uut.Update(data1);
-            _uut.Update(data2);
-
-            //Data to overwrite with
-            _uut.Update(data3);
-
-            _fakeTracksManager.Received().AddTrack(Arg.Any<List<ITrack>>(), Arg.Any<ITrack>());
-
+            //Tester på hvor mange gange funktionen IsInAirSpace burde blive kaldt i den situation
+            _fakeAirSpaceTracker.Received(4).IsInAirSpace(Arg.Any<ITrack>());
         }
 
+        
         [Test]
-        public void Test_SeparationAddedToListWhen_IsSeparation()
+        public void Test_IsSeparation_IsSeparationCalledOnceWhenTwoTracksInList()
         {
 
             string data1 = "ATR423;39045;12932;14000;20151006213456789";
@@ -203,7 +189,7 @@ namespace UnitTest
 
             string data3 = "ABC123;10000;5000;10000;20151006213456789";
             string data4 = "ABC123;10000;5000;10000;20151006213656789";
-            
+
             //They are in airspace
             _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
 
@@ -216,11 +202,14 @@ namespace UnitTest
             _uut.Update(data3);
             _uut.Update(data4);
 
-            _fakeSeparationManager.Received().AddSeparation(Arg.Any<ISeparationCondition>());
-            //Assert.That(_uut._currentSeparations.Count, Is.EqualTo(1));
+            _fakeCalculator.Received(1).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
+          
         }
-
         
+     
+
+    
+
         [Test]
         public void Test_SeparationRemoveFromListWhen_NotIsSeparation()
         {
@@ -247,11 +236,10 @@ namespace UnitTest
             _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(false);
             _uut.Update(data4);
 
-            _fakeSeparationManager.Received().RemoveAt(Arg.Any<int>());
-            //Assert.That(_uut._currentSeparations.Count, Is.EqualTo(0));
+            _fakeCalculator.Received(2).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
         }
 
-    
+
 
         [Test]
         public void Test_OverwriteSeparationWhen_IsSeparation()
@@ -280,14 +268,8 @@ namespace UnitTest
 
             _uut.Update(data5);
 
-            _fakeSeparationManager.ReceivedWithAnyArgs()
-                .RemoveAt(Arg.Any<int>());
-
-            _fakeSeparationManager.ReceivedWithAnyArgs().AddSeparation(Arg.Any<ISeparationCondition>());
-
-            //Assert.That(_uut._currentSeparations[0].Timestamp.Year, Is.EqualTo(2016));
+            _fakeCalculator.Received(2).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
         }
-
         [Test]
         public void Test_DefaultConstructor_called()
         {
