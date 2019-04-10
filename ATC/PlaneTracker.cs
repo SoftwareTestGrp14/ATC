@@ -15,34 +15,32 @@ namespace ATC
         public IAirSpaceTracker _airSpaceTracker { get; }
         public List<string[]> tempDataList = new List<string[]>();
         public List<ISeparationCondition> _currentSeparations { get; }
-        public ConsoleLog _cLog { get; }
-        public FileLog _fLog { get; }
+
         public ICalculator _calc { get; }
      
+        public IFileRenderer _fileRenderer { get; }
+        public IConsoleRenderer _consoleRenderer { get; }
 
 
-
-        public PlaneTracker(IAirSpaceTracker airSpaceTracker, List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ConsoleLog cLog, FileLog fLog, ICalculator calc)
+        public PlaneTracker(IAirSpaceTracker airSpaceTracker, List<ISeparationCondition> currentSeparations, List<ITrack> tracks, ICalculator calc, IFileRenderer fileRenderer, IConsoleRenderer consoleRenderer)
         {
-            _cLog = cLog;
-            _fLog = fLog;
             _tracks = tracks;
             _currentSeparations = currentSeparations;
             _airSpaceTracker = airSpaceTracker;
             _calc = calc;
+            _fileRenderer = fileRenderer;
+            _consoleRenderer = consoleRenderer;
 
         }
 
         public PlaneTracker()
         {
-            _cLog = new ConsoleLog();
-            _fLog = new FileLog();
             _tracks = new List<ITrack>();
             _currentSeparations = new List<ISeparationCondition>();
             _airSpaceTracker = new AirSpaceTracker();
             _calc = new Calculator();
-
-
+            _fileRenderer = new FileRenderer();
+            _consoleRenderer = new ConsoleRenderer();
         }
 
 
@@ -144,9 +142,11 @@ namespace ATC
                             if (!_currentSeparations.Exists(x => x.Equals(newSeparationCondition)))
                             {
                                 //This separation was not previously registered and will be inserted in list
+                                _fileRenderer.Render(newSeparationCondition);
+                       /*         
                                 _currentSeparations.Add(newSeparationCondition);
                                 _fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
-
+                                */
                             }
                             else
                             {
@@ -180,7 +180,7 @@ namespace ATC
 
 
                 //Writes to log
-                
+                /*
                 _cLog.Write("");
                 _cLog.Write("All tracks in airspace :");
                 foreach (var track in _tracks)
@@ -189,9 +189,12 @@ namespace ATC
                 }
                 _cLog.Write("");
                 _cLog.Write("");
-                
+                */
+
+                _consoleRenderer.Render(_tracks);
 
               
+                /*
 
                 _cLog.Write("");
                 _cLog.Write("All separations:");
@@ -201,16 +204,10 @@ namespace ATC
                 }
                 _cLog.Write("");
                 _cLog.Write("");
+            
+            */
+                _consoleRenderer.Render(_currentSeparations);
             }
-
-
-
-
-
-                
-
-
-
         }
 
         public string[] ConvertTransponderData(string data)

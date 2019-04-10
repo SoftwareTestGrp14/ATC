@@ -13,6 +13,11 @@ namespace ATC
         {
             _logger = logger;
         }
+
+        public FileRenderer()
+        {
+            _logger = new FileLog();
+        }
         public void Render(ISeparationCondition separation)
         {
             var formattedSeparation =

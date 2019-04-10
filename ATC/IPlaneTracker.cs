@@ -9,8 +9,6 @@ namespace ATC
 
         List<ITrack> _tracks { get; }
         IAirSpaceTracker _airSpaceTracker { get; }
-        ConsoleLog _cLog { get; }
-        FileLog _fLog { get; }
         ICalculator _calc { get; }
         void Update(string data);
 
