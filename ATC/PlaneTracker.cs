@@ -143,10 +143,10 @@ namespace ATC
                             {
                                 //This separation was not previously registered and will be inserted in list
                                 _fileRenderer.Render(newSeparationCondition);
-                       /*         
+                                
                                 _currentSeparations.Add(newSeparationCondition);
-                                _fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
-                                */
+                               // _fLog.Write($"Separation condition detected at {newSeparationCondition._track1._tag} and {newSeparationCondition._track2._tag} at timestamp: {newSeparationCondition.Timestamp}");
+                                
                             }
                             else
                             {
