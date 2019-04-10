@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using ATC;
 using NUnit.Framework;
 using NSubstitute;
@@ -16,6 +17,10 @@ namespace UnitTest
         private FileLog _fakeFile;
         private ITrack _fakeTrack;
         private ICalculator _fakeCalculator;
+
+        private IConsoleRenderer _fakeConsoleRenderer;
+
+        private IFileRenderer _fakeFileRenderer;
        // private ISeparationCondition _fakeSeparationCondition;
 
 
@@ -31,10 +36,11 @@ namespace UnitTest
             _fakeConsole = Substitute.For<ConsoleLog>();
             _fakeTrack = Substitute.For<ITrack>();
             _fakeCalculator = Substitute.For<ICalculator>();
-            //_fakeSeparationCondition = Substitute.For<ISeparationCondition>();
+            _fakeConsoleRenderer = Substitute.For<IConsoleRenderer>();
+            _fakeFileRenderer = Substitute.For<IFileRenderer>();
 
 
-            _uut = new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeConsole, _fakeFile, _fakeCalculator);
+            _uut = new PlaneTracker(_fakeAirSpaceTracker, _fakeCurrentSeparations, _fakeTracks, _fakeCalculator,_fakeFileRenderer, _fakeConsoleRenderer);
         }
 
         [Test]
@@ -347,12 +353,338 @@ namespace UnitTest
 
             _fakeCalculator.Received(2).IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>());
         }
-        [Test]
-        public void Test_DefaultConstructor_called()
-        {
-            _uut = new PlaneTracker();
 
-            Assert.That(_uut, Is.Not.EqualTo(null));
+
+
+        [Test]
+        public void Test_TrackInAirspace_RenderCalled()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            //The track is in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //Data sendt
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+
+            //_fakeConsoleRenderer.Received().Render(Arg.Is<List<ITrack>>(x=>x.Count==1));
+            _fakeConsoleRenderer.Received().Render(Arg.Any<List<ITrack>>());
+            
+
+        }
+
+
+        [Test]
+        public void Test_TrackInAirspace_RenderCalledWithListCount_1()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            //The track is in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //Data sendt
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+
+            _fakeConsoleRenderer.Received().Render(Arg.Is<List<ITrack>>(x=>x.Count==1));
+
+        }
+
+
+        [Test]
+        public void Test_RemoveTrackNotInAirspace_RenderCalled()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            //The track is in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //Data sendt
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            //Track is not in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(false);
+
+
+            _uut.Update(data1);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Any<List<ITrack>>());
+        }
+
+
+        [Test]
+        public void Test_RemoveTrackNotInAirspace_RenderCalledWithListCount_0()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            //The track is in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //Data sendt
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            //Track is not in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(false);
+
+
+            _uut.Update(data1);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Is<List<ITrack>>(x=>x.Count==0));
+        }
+
+
+
+        [Test]
+        public void Test_OverwriteExcistingTrackInAirspace_RenderCalled()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+            string data3 = "ATR423;40000;13500;14000;20151006213656789";
+
+            //The track is in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //Data sendt
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            //Data to overwrite with
+            _uut.Update(data3);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Any<List<ITrack>>());
+        }
+
+        [Test]
+        public void Test_OverwriteExcistingTrackInAirspace_RenderCalledWithListCount_1()
+        {
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+            string data3 = "ATR423;40000;13500;14000;20151006213656789";
+
+            //The track is in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //Data sendt
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            //Data to overwrite with
+            _uut.Update(data3);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Is<List<ITrack>>(x=>x.Count==1));
+        }
+
+
+        [Test]
+        public void Test_IsSeparation_TestConsoleRenderCalledWithSepList()
+        {
+
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;10000;20151006213456789";
+            string data4 = "ABC123;10000;5000;10000;20151006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Any<List<ISeparationCondition>>());
+
+        }
+
+        [Test]
+        public void Test_IsSeparation_TestConsoleRenderCalledWithSepListCount_1()
+        {
+
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;10000;20151006213456789";
+            string data4 = "ABC123;10000;5000;10000;20151006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Is<List<ISeparationCondition>>(x=>x.Count==1));
+
+        }
+
+        [Test]
+        public void Test_IsSeparation_TestFileRenderCalled()
+        {
+
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;10000;20151006213456789";
+            string data4 = "ABC123;10000;5000;10000;20151006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+            _fakeFileRenderer.Received().Render(Arg.Any<ISeparationCondition>());
+
+        }
+
+
+
+        [Test]
+        public void Test_SeparationRemoveFromListWhen_ConsoleRenderCalledWithSepCondList()
+        {
+
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;10000;20151006213456789";
+            string data4 = "ABC123;10000;5000;10000;20151006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+            //There is not separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(false);
+            _uut.Update(data4);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Any<List<ISeparationCondition>>());
+
+
+        }
+
+        [Test]
+        public void Test_SeparationRemoveFromListWhen_ConsoleRenderCalledWithSepCondListCount_0()
+        {
+
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;10000;20151006213456789";
+            string data4 = "ABC123;10000;5000;10000;20151006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+            //There is not separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(false);
+            _uut.Update(data4);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Is<List<ISeparationCondition>>(x=>x.Count==0));
+
+
+        }
+
+
+        [Test]
+        public void Test_OverwriteSeparationWhen_ConsoleRenderCalledWithSepCondList()
+        {
+
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;13900;20151006213456789";
+            string data4 = "ABC123;10000;5000;13900;20151006213656789";
+
+            string data5 = "ABC123;10000;5000;13900;20161006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+
+            _uut.Update(data5);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Any<List<ISeparationCondition>>());
+        }
+
+        [Test]
+        public void Test_OverwriteSeparationWhen_ConsoleRenderCalledWithSepCondListCount_0()
+        {
+
+            string data1 = "ATR423;39045;12932;14000;20151006213456789";
+            string data2 = "ATR423;39045;13500;14000;20151006213656789";
+
+            string data3 = "ABC123;10000;5000;13900;20151006213456789";
+            string data4 = "ABC123;10000;5000;13900;20151006213656789";
+
+            string data5 = "ABC123;10000;5000;13900;20161006213656789";
+
+            //They are in airspace
+            _fakeAirSpaceTracker.IsInAirSpace(Arg.Any<ITrack>()).Returns(true);
+
+            //There is separation
+            _fakeCalculator.IsSeparation(Arg.Any<ITrack>(), Arg.Any<ITrack>()).Returns(true);
+
+            _uut.Update(data1);
+            _uut.Update(data2);
+
+            _uut.Update(data3);
+            _uut.Update(data4);
+
+
+            _uut.Update(data5);
+
+            _fakeConsoleRenderer.Received().Render(Arg.Is<List<ISeparationCondition>>(x => x.Count == 1));
         }
 
     }
